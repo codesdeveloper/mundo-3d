@@ -1,0 +1,13 @@
+
+#lookat{
+   position: absolute;
+   top: 0;
+  }
+  
+  #direction, #gravity, #full, #start{
+   position:absolute;
+   border: solid 5px #00ff00;
+   border-radius: 10px;
+   z-index: 9999;
+  }
+  
