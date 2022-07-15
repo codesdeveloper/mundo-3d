@@ -17,8 +17,7 @@ class Scene {
   }
 
   addItem = function(item, x, y, z) {
-    if (x != null && y != null && z != null)
-      item.setPosition(x, y, z);
+    if (x != null && y != null && z != null) item.setPosition(x, y, z);
     this.#itens.push(item);
   };
 
@@ -28,7 +27,8 @@ class Scene {
 
   render = function() {
 
-
+    var vp = this.getViewport();
+    var cposition = this.getCamera().getPosition();
 
     for (var i = 0; i < this.getItens().length; ++i) {
       var item = this.getItens()[i];
@@ -41,10 +41,11 @@ class Scene {
         var point = item.getPoints()[j];
 
         var out = item.transform(point.x, point.y, point.z);
+        var dist = (out.z + position.z - cposition.z) * 0.2;
 
         coords.push({
-          x: (position.x + out.x) * 50,
-          y: (position.y + out.y) * 50,
+          x: vp.width / 2 + (position.x - cposition.x + out.x) * (vp.width + vp.height) * 0.04 / dist,
+          y: vp.height / 2 + (position.y + cposition.y + out.y) * (vp.width + vp.height) * 0.04 / dist,
           z: out.z
         })
 

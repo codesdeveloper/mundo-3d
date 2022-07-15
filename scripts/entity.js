@@ -7,8 +7,8 @@ class Entity extends Matrix {
   #name = "";
   #id = -1;
 
-  constructor(matrix) {
-    if (matrix) super(matrix);
+  constructor(matrix, lookat) {
+    if (matrix && lookat) super(matrix, lookat);
     else super();
   }
 
@@ -76,7 +76,8 @@ class Entity extends Matrix {
     item.setEdges(Util.cloneObject(this.#edges));
     item.setPolygonus(Util.cloneObject(this.#polygonus));
     item.setCoords(Util.cloneObject(this.#coords));
-    item.setPosition(Util.cloneObject(this.getPosition()));
+    var position = Util.cloneObject(this.getPosition());
+    item.setPosition(position.x, position.y, position.z);
     item.scale(this.getSize().x, this.getSize().y, this.getSize().z)
     return item;
   };

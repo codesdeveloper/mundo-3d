@@ -30,6 +30,7 @@ class View {
       var item = itens[i];
       for (var j = 0; j < item.getCoords().length; ++j) {
         var coord = item.getCoords()[j];
+        //if(coord.z <= 0)continue;
       
       ctx.beginPath();
       
