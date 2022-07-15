@@ -41,10 +41,11 @@ class Scene {
         var point = item.getPoints()[j];
 
         var out = item.transform(point.x, point.y, point.z);
+        out = this.getCamera().transform(out.x + position.x, out.y + position.y, out.z + position.z);
         var dist = (out.z + position.z - cposition.z) * 0.2;
 
         coords.push({
-          x: vp.width / 2 + (position.x - cposition.x + out.x) * (vp.width + vp.height) * 0.04 / dist,
+          x: vp.width / 2 + (cposition.x + out.x) * (vp.width + vp.height) * 0.04 / dist,
           y: vp.height / 2 + (position.y + cposition.y + out.y) * (vp.width + vp.height) * 0.04 / dist,
           z: out.z
         })

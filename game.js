@@ -27,8 +27,9 @@ scene.addItem(cube.clone(), -7, 0, 0);
 scene.addItem(pyramid, 7, 0, 0);
 
 view.frameAnimation(() => {
-  cube.rotate(0, 0.01, 0, 0);
-  pyramid.rotate(0, 0.01, 0);
+  //cube.rotate(0, 0.01, 0, 0);
+  //pyramid.rotate(0, 0.01, 0);
+  //scene.getCamera().rotate(0, 0, 0.01);
   scene.render();
   view.render();
 });
@@ -64,10 +65,25 @@ canvas.onkeydown = function(e){
   };
 };
 
+var start = {x:0, y:0};
+var move = false;
+velocity = 0.02;
+
 canvas.onmousedown = function(e){
-  
+  start.x = e.clientX;
+  start.y = e.clientY;
+  move = true;
 }
 
 canvas.onmousemove = function(e){
-  
+  if(!move)return;
+  var posX = (e.clientX > start.x) ? 1 : -1;
+  var posY = (e.clientY < start.y) ? 1 : -1;                                                
+  scene.getCamera().rotate(posY * velocity, -posX * velocity, 0);
+  start.x = e.clientX;
+  start.y = e.clientY;
+}
+
+canvas.onmouseup = function(e){
+  move = false;
 }
