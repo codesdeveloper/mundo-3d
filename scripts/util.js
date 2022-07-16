@@ -1,5 +1,5 @@
 const Util = {
-
+  
   cloneObject: function(object) {
     if (object == null) return null;
 
@@ -68,10 +68,10 @@ const Textures = {
     var ind = 0;
 
     for (var z = h / 2; z >= -h / 2; --z) {
-      for (var x = w / 2; x <= w / 2; ++x) {
+      for (var x = -w / 2; x <= w / 2; ++x) {
         points.push({ x: x, y: 0, z: z });
-        if (x > w / 2) edges.push({ a: ind, b: ind - 1 });
-        if (x < h / 2) edges.push({ a: ind, b: ind - w - 2 });
+        if (x > -w / 2) edges.push({ a: ind, b: ind - 1 });
+        if (z < h / 2) edges.push({ a: ind, b: ind - w - 1 });
         if (x > w / 2 && x < h / 2) polygonus.push([{ vertices: [ind - w - 2, ind - w - 1, ind, ind - 1] }]);
         ++ind;
       }
@@ -84,3 +84,4 @@ const Textures = {
   },
 
 }
+
