@@ -8,6 +8,12 @@
 
 <body style="margin:0;">
   <canvas style="background: #888;" id="canvas"></canvas>
+  <span id="print" style="position:absolute;bottom: 50px; left: 50%;color:red;border:2px solid green;padding:7px;border-radius: 10px;"></span>
+  <script>var print = function(msg){
+   document.getElementById("print").innerText = msg;
+  }
+  </script>
+  
   <script src="scripts/util.js"></script>
   <script src="scripts/matrix.js"></script>
   <script src="scripts/entity.js"></script>
