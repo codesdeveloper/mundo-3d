@@ -58,9 +58,9 @@ class Matrix {
   transform = function(x, y, z) {
     var m = this.#data.slice();
     return {
-      x: m[0] * x + m[1] * y + m[2] * z,
-      y: m[3] * x + m[4] * y + m[5] * z,
-      z: m[6] * x + m[7] * y + m[8] * z,
+      x: m[0] * x + m[3] * y + m[6] * z,
+      y: m[1] * x + m[4] * y + m[7] * z,
+      z: m[2] * x + m[5] * y + m[8] * z,
     }
   }
   
