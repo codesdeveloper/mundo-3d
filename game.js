@@ -36,6 +36,9 @@ Util.addController(scene.getCamera(), canvas);
 
 view.frameAnimation(() => {
   // cube.rotate(0, 0.01, 0, 0);
+  
+  scene.getCamera().translate(controllConfig.translate.x, controllConfig.translate.y, controllConfig.translate.z);
+   scene.getCamera().rotate(controllConfig.rotate.x, controllConfig.rotate.y, controllConfig.rotate.z);
   pyramid.rotate(0, 0.01, 0);
   
   scene.render();
