@@ -43,11 +43,11 @@ class Scene {
           position.x + out.x - cposition.x,
           position.y + out.y - cposition.y,
           position.z + out.z - cposition.z);
-          
+
         var dist = (out.z) * 0.2;
         var size = (vp.width + vp.height) * 0.04;
-        
-        if(dist <= 0)dist = 0.0001;
+
+        if (dist <= 0) dist = 0.0001;
 
         coords.push({
           x: vp.width / 2 + out.x * size / dist,
@@ -57,8 +57,28 @@ class Scene {
 
       }
 
+      item.sortPolygonus((a, b) => {
+        var av = a.vertices,
+          bv = b.vertices;
+          
+          var ax = (coords[av[0]].x + coords[av[1]].x + coords[av[2]].x + coords[av[3]].x) / 4;
+          var bx = (coords[bv[0]].x + coords[bv[1]].x + coords[bv[2]].x + coords[bv[3]].x) / 4;
+          
+          var ay = (coords[av[0]].y + coords[av[1]].y + coords[av[2]].y + coords[av[3]].y) / 4;
+          var by = (coords[bv[0]].y + coords[bv[1]].y + coords[bv[2]].y + coords[bv[3]].y) / 4;
+          
+          var az = (coords[av[0]].z + coords[av[1]].z + coords[av[2]].z + coords[av[3]].z) / 4;
+          var bz = (coords[bv[0]].z + coords[bv[1]].z + coords[bv[2]].z + coords[bv[3]].z) / 4;
+          
+          var ar = Math.sqrt(ax * ax + ay * ay + az * az)
+          var br = Math.sqrt(bx * bx + by * by + bz * bz)
+          
+          return (ar < br ? 1 : -1); 
+          
+      });
+
       item.setCoords(coords);
-      
+
     }
   };
 

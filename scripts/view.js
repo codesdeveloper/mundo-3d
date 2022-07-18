@@ -46,11 +46,12 @@ class View {
       if (style.type == Entity.TYPELINES)
         for (var j = 0; j < item.getEdges().length; ++j) {
           var edge = item.getEdges()[j];
-          var a = coords[edge.a], b = coords[edge.b];
+          var a = coords[edge.a],
+            b = coords[edge.b];
           if (a.z <= 0 && b.z <= 0) continue
 
           var ind = (a.z + b.z) * 0.5;
-          if(ind < 1)ind = 1;
+          if (ind < 1) ind = 1;
           ctx.lineWidth = style.size / ind;
 
           ctx.beginPath();
@@ -59,6 +60,33 @@ class View {
           ctx.stroke();
         }
 
+      if (style.type == Entity.TYPEPOLYGONUS)
+        for (var j = 0; j < item.getPolygonus().length; ++j) {
+          var poly = item.getPolygonus()[j];
+
+          var vert = poly.vertices;
+
+          var a = coords[vert[0]],
+            b = coords[vert[1]],
+            c = coords[vert[2]],
+            d = coords[vert[3]];
+
+           ctx.beginPath();
+
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
+          ctx.lineTo(c.x, c.y);
+          ctx.lineTo(d.x, d.y);
+          
+          ctx.strokeStyle = "red";
+        
+          // ctx.clip(); 
+            // ctx.closePath();
+          
+          ctx.fill();
+          ctx.stroke();
+
+        }
 
 
     }

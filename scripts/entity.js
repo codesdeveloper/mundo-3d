@@ -81,7 +81,7 @@ class Entity extends Matrix {
     this.#edges.sort(calback);
   }
 
-  sortPolygons = function(calback) {
+  sortPolygonus = function(calback) {
     this.#polygonus.sort(calback);
   }
 

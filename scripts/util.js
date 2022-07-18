@@ -69,16 +69,15 @@ const Util = {
   addController: function(camera, area) {
     var lookat = camera.getLookat();
     var isMove = false;
-    var velocity = 0.1;
+    var velocity = 0.01  ;
     var start = { x: 0, y: 0 };
     var isFull = false;
-
+   /*
     area.onkeydown = function(e) {
       var c = Math.cos(lookat.y),
         s = Math.sin(lookat.y);
       switch (e.keyCode) {
         case 37:
-          print(43423423);
           camera.translate(-c, 0, -s);
           break;
         case 39:
@@ -98,6 +97,8 @@ const Util = {
           break;
       };
     };
+    
+    
     area.onmousedown = function(e) {
       start.x = e.clientX;
       start.y = e.clientY;
@@ -114,14 +115,14 @@ const Util = {
         s = Math.sin(lookat.y);
 
       camera.rotate(
-        posY * -c * velocity,
+        0,// posY * -c * velocity,
         posX * velocity,
-        posY * s * velocity);
+        0// posY * s * velocity
+        );
     }
     area.onmouseup = function(e) {
       isMove = false;
-    }
-
+    }*/
 
     var size = (area.width + area.height) * 0.08;
     var margin = 10;
