@@ -118,9 +118,9 @@ const Util = {
         s = Math.sin(lookat.y);
 
       camera.rotate(
-        0,// posY * -c * velocity,
+        posY * -c * velocity,
         posX * velocity,
-        0// posY * s * velocity
+        posY * s * velocity
         );
     }
     area.onmouseup = function(e) {

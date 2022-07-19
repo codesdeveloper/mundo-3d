@@ -33,6 +33,7 @@ class Scene {
     for (var i = 0; i < this.getItens().length; ++i) {
       var item = this.getItens()[i];
       var position = item.getPosition();
+      item.z = 0;
 
       var coords = [];
 
@@ -43,6 +44,12 @@ class Scene {
           position.x + out.x - cposition.x,
           position.y + out.y - cposition.y,
           position.z + out.z - cposition.z);
+          
+          var mat2 = new Matrix();
+          mat2.rotate(out.y * 0.0001, out.x * 0.0001, 0);
+          out = mat2.transform(out.x, out.y, out.z);
+          
+          
 
         var dist = (out.z) * 0.07;
         var size = (vp.width + vp.height) * 0.04;
@@ -54,6 +61,8 @@ class Scene {
           y: vp.height / 2 + -out.y * size / dist,
           z: (out.z < 0) ? 0 : out.z
         });
+        
+        item.z += out.z;
 
       }
 
@@ -78,8 +87,16 @@ class Scene {
       });
 
       item.setCoords(coords);
-
+      
+      
+      
     }
+    
+    this.getItens().sort((a, b) => {
+      return (a.z < b.z ? 1 : -1);
+    })
+    
+    
   };
 
 }

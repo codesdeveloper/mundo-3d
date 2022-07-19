@@ -187,6 +187,7 @@ class View {
 
 
           ctx.strokeStyle = "gray";
+          ctx.fillStyle = "gray";
           //primeiro triangulo
           ctx.save();
           ctx.beginPath();
@@ -194,6 +195,7 @@ class View {
           ctx.lineTo(b.x, b.y);
           ctx.lineTo(c.x, c.y);
           ctx.clip();
+          ctx.fill();
           ctx.stroke();
           var img = document.createElement("img");
           img.src = poly.texture;
@@ -209,6 +211,7 @@ class View {
           ctx.lineTo(c.x, c.y);
           ctx.lineTo(d.x, d.y);
           ctx.clip();
+          ctx.fill();
           ctx.stroke();
           var img = document.createElement("img");
           img.src = poly.texture;
