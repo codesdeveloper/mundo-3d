@@ -44,7 +44,7 @@ class Scene {
           position.y + out.y - cposition.y,
           position.z + out.z - cposition.z);
 
-        var dist = (out.z) * 0.2;
+        var dist = (out.z) * 0.07;
         var size = (vp.width + vp.height) * 0.04;
 
         if (dist <= 0) dist = 0.0001;
@@ -70,10 +70,10 @@ class Scene {
           var az = (coords[av[0]].z + coords[av[1]].z + coords[av[2]].z + coords[av[3]].z) / 4;
           var bz = (coords[bv[0]].z + coords[bv[1]].z + coords[bv[2]].z + coords[bv[3]].z) / 4;
           
-          var ar = Math.sqrt(ax * ax + ay * ay + az * az)
-          var br = Math.sqrt(bx * bx + by * by + bz * bz)
+          var ar = Math.abs(Math.sqrt(ax * ax + ay * ay + az * az));
+          var br = Math.abs(Math.sqrt(bx * bx + by * by + bz * bz));
           
-          return (ar < br ? 1 : -1); 
+          return (az < bz ? 1 : -1); 
           
       });
 

@@ -72,27 +72,30 @@ const Util = {
     var velocity = 0.01  ;
     var start = { x: 0, y: 0 };
     var isFull = false;
-   /*
-    area.onkeydown = function(e) {
+   
+    document.onkeydown = function(e) {
       var c = Math.cos(lookat.y),
         s = Math.sin(lookat.y);
+        
+        print(e.keyCode);
+        
       switch (e.keyCode) {
-        case 37:
-          camera.translate(-c, 0, -s);
+        case 65:
+          camera.translate(-c, 0, s);
           break;
-        case 39:
-          camera.translate(c, 0, s);
-          break;
-        case 38:
-          camera.translate(-s, 0, c);
-          break;
-        case 40:
-          camera.translate(s, 0, -c);
+        case 68:
+          camera.translate(c, 0, -s);
           break;
         case 87:
-          camera.translate(0, 1, 0);
+          camera.translate(s, 0, c);
           break;
         case 83:
+          camera.translate(-s, 0, -c);
+          break;
+        case 69:
+          camera.translate(0, 1, 0);
+          break;
+        case 81:
           camera.translate(0, -1, 0);
           break;
       };
@@ -122,8 +125,10 @@ const Util = {
     }
     area.onmouseup = function(e) {
       isMove = false;
-    }*/
-
+    }
+    
+    
+    /*
     var size = (area.width + area.height) * 0.08;
     var margin = 10;
     var style = "border:2px solid green; position:absolute; border-radius:10px;";
@@ -212,48 +217,9 @@ const Util = {
     document.body.appendChild(touchpad);
     document.body.appendChild(updown);
     document.body.appendChild(full);
+      // */
 
 
-
-    /*
-      var updown = document.createElement("div");
-      updown.setAttribute("style", style);
-      
-      updown.style.width = (size/2) + "px";
-      updown.style.height = size + "px";
-      updown.style.right = 10 + "px";
-      updown.style.bottom = 10 + "px";
-          
-      
-          
-      var point = document.createElement("div");
-      point.setAttribute("style", style);
-      
-      point.style.width = (size / 4) + "px";
-      point.style.height = (size / 4) + "px";
-      point.style.background = "blue"; 
-      point.style.left = 10 + "px";
-      point.style.top = 10 + "px";
-      
-      //touchpad.appendChild(point);
-      //updown.appendChild(point.cloneNode());
-      
-      log(document.body.appendChild(touchpad));
-      document.body.appendChild(updown);
-      document.body.appendChild(full);
-      document.body.appendChild(point);
-      */
-    /*
-    var width = area.width * 0.4, height = area.height * 0.4;
-    var x = (area.width - width) / 2, y = (area.height - height) / 2;
-    
-    
-    var style = "<style> #block{top:"+y+"px; left:"+x+"px; width:"+width+"px;height:"+height+"px; border:2px solid red; position:absolute;}   </style>";
-    var div = document.createElement("div");
-    div.id = "block"; 
-     document.head.innerHTML += style;
-     document.body.appendChild(div);
-     */
   }
 
 }
