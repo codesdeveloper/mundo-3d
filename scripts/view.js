@@ -186,7 +186,7 @@ class View {
           // if (a.z < 1 && b.z < 1 && c.z < 1 && d.z < 1) continue
 
 
-          ctx.strokeStyle = "gray";
+          ctx.strokeStyle = "red";
           ctx.fillStyle = "gray";
           //primeiro triangulo
           ctx.save();
