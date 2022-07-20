@@ -1,16 +1,61 @@
 class Controller {
 
+  static TYPECOMPUTER = 212121;
+  static TYPEPHONE = 378473;
+  static TYPETECLADO = 738742;
+    
+  translate = {x:0, y:0, z: 0};
+  rotate = {x: 0, y:0, z:0 };
+  isFull = false;
 
+  constructor(tye){print(000);
+    document.onkeydown = function(e) {
+      var c = Math.cos(lookat.y),
+        s = Math.sin(lookat.y);
+        
+        print(e);
+        
+      switch (e.keyCode) {
+        case 65:
+          camera.translate(-c, 0, s);
+          break;
+        case 68:
+          camera.translate(c, 0, -s);
+          break;
+        case 87:
+          camera.translate(s, 0, c);
+          break;
+        case 83:
+          camera.translate(-s, 0, -c);
+          break;
+        case 69:
+          camera.translate(0, 1, 0);
+          break;
+        case 81:
+          camera.translate(0, -1, 0);
+          break;
+      };
+    };
+  }
 
+  active = function(){
+
+  }
+
+  desative = function(){
+
+  }
+
+    /*
     var elem = document.documentElement;
     function openFullscreen() {
       if (elem.requestFullscreen) {
         elem.requestFullscreen();
-      } else if (elem.mozRequestFullScreen) { /* Firefox */
+      } else if (elem.mozRequestFullScreen) { // Firefox 
         elem.mozRequestFullScreen();
-      } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
+      } else if (elem.webkitRequestFullscreen) { // Chrome, Safari & Opera 
         elem.webkitRequestFullscreen();
-      } else if (elem.msRequestFullscreen) { /* IE/Edge */
+      } else if (elem.msRequestFullscreen) { // IE/Edge 
         elem.msRequestFullscreen();
       }
     }
@@ -25,11 +70,6 @@ class Controller {
         document.msExitFullscreen();
       }
     }
-    
-    var controllConfig = {
-      translate : {x:0, y:0, z:0},
-      rotate : {x:0, y:0, z:0}
-    };
 
 
 
@@ -186,15 +226,11 @@ addController: function(camera, area) {
     document.body.appendChild(touchpad);
     document.body.appendChild(updown);
     document.body.appendChild(full);
-      // */
+      // 
 
 
   }
-
-}
-
+*/
 
 
-
-
-}
+};

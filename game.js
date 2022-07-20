@@ -8,6 +8,7 @@ const width = window.innerWidth,
 let canvas = document.getElementById("canvas");
 let scene = new Scene();
 let view = new View();
+var controll =  new Controller();
 //Configurações do game
 canvas.width = width;
 canvas.height = height;
@@ -16,7 +17,7 @@ scene.getCamera().setPosition(0, 2, -6);
 view.setFPS(60);
 view.setScene(scene);
 view.setCanvas(canvas);
-//Util.addController(scene.getCamera(), canvas);
+// Util.addController(scene.getCamera(), canvas);
 //Definir objetos
 var cube = Textures.createCube();
 var pyramid = Textures.createPyramid();
@@ -41,14 +42,6 @@ scene.addItem(plane, 0, -1, 0);
 scene.addItem(cube, 0, 0, 0);
 scene.addItem(cube.clone(), -7, 0, 0);
 scene.addItem(pyramid, 7, 0, 0);
-scene.addItem(cube2, 0, 2, 0);
-scene.addItem(cube2.clone(), -6, 0, 8);
-scene.addItem(cube2.clone(), -4, 0, );
-scene.addItem(cube2.clone(), -2, 0, 8);
-scene.addItem(cube2.clone(), 0, 0, 6);
-scene.addItem(cube2.clone(), 2, 0, 8);
-scene.addItem(cube2.clone(), 4, 0, 10);
-scene.addItem(cube2.clone(), 6, 0, 8);
 //Start animação
 view.frameAnimation(() => {
    //scene.getCamera().translate(controllConfig.translate.x, controllConfig.translate.y, controllConfig.translate.z);
