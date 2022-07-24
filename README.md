@@ -4,7 +4,7 @@ aplicação web de matriz 3d de objetos
 
 
 
-  [ ] Configura controle window e phone
+  [x] Configura controle window e phone
   [x] Configurar draw image
   [x] Configurar rotate image draw
   [ ] Configurar luzes nos objetos

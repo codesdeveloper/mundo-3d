@@ -60,15 +60,13 @@ view.frameAnimation(() => {
   view.render();
 });
 
-
+//Adicionar Controle
 var lookat = scene.getCamera().getLookat();
 $(document).on({
-
   click: function() {
     if (!controll.active) return;
 
   },
-
   keydown: function(e) {
     if (!controll.active) return;
     var c = Math.cos(lookat.y),
@@ -106,20 +104,17 @@ $(document).on({
         break;
     }
   },
-
   keyup: function() {
     if (!controll.active) return;
     controll.translate = { x: 0, y: 0, z: 0 };
     controll.rotate = { x: 0, y: 0, z: 0 };
   },
-
   mousedown: function(e) {
     if (!controll.active) return;
     controll.start.x = e.clientX;
     controll.start.y = e.clientY;
     controll.isMove = true;
   },
-
   mousemove: function(e) {
     if (!controll.active || !controll.isMove) return;
     var c = Math.cos(lookat.y),
@@ -128,13 +123,117 @@ $(document).on({
     var y = (e.clientY - controll.start.y);
     x = (x < -10) ? -10 : (x > 10) ? 10 : x;
     y = (y < -10) ? -10 : (y > 10) ? 10 : y;
-    controll.rotate = {x: y * -c * 0.005, y: x * 0.005, z: y * s * 0.005};
+    controll.rotate = { x: y * -c * 0.005, y: x * 0.005, z: y * s * 0.005 };
   },
-
   mouseup: function(e) {
     if (!controll.active) return;
     controll.isMove = false;
     controll.rotate = { x: 0, y: 0, z: 0 };
   }
-
 });
+
+var size = (canvas.width + canvas.height) * 0.08;
+var div1 = $("<div/>").css({
+  width: canvas.width,
+  height: canvas.height,
+  position: "absolute",
+  left: 0,
+  top: 0,
+}).on({
+  touchmove: function(t) {
+    if(!controll.active)return;
+    var touch = t.touches[0];
+    var x = ((touch.clientX - (canvas.width / 2)) / (canvas.width / 2));
+    var y = ((touch.clientY - (canvas.height / 2)) / (canvas.height / 2));
+    x = (x < -1) ? -1 : (x > 1) ? 1 : x;
+    y = (y < -1) ? -1 : (y > 1) ? 1 : y;
+    var c = Math.cos(lookat.y),
+      s = Math.sin(lookat.y);
+    controll.rotate = { x: y * -c * 0.07, y: x * 0.07, z: y * s * 0.07, };
+  },
+  touchend: function() {
+    if(!controll.active)return;
+    controll.rotate = { x: 0, y: 0, z: 0 };
+  }
+});
+$("body").append(div1);
+
+var div2 = $("<div/>").css({
+  width: size,
+  height: size,
+  left: 10,
+  bottom: 10,
+  border: "2px solid green",
+  position: "absolute",
+  "border-radius": "10px"
+}).on({
+  touchmove: function(t) {
+    if(!controll.active)return;
+    var touch = t.touches[0];
+    var ofset = div2.position();
+    var x = ((touch.clientX - ofset.left - (size / 2)) / (size / 2));
+    var y = ((touch.clientY - ofset.top - (size / 2)) / (size / 2));
+    x = (x < -1) ? -1 : (x > 1) ? 1 : x;
+    y = (y < -1) ? -1 : (y > 1) ? 1 : y;
+    var c = Math.cos(lookat.y),
+      s = Math.sin(lookat.y);
+    controll.translate = { x: x * c + y * -s, y: 0, z: x * -s + y * -c };
+  },
+  touchend: function() {
+    if(!controll.active)return;
+    controll.translate = { x: 0, y: 0, z: 0 };
+  }
+});
+$("body").append(div2);
+
+var div3 = $("<div/>").css({
+  width: size / 2,
+  height: size,
+  right: 10,
+  bottom: 10,
+  border: "2px solid green",
+  position: "absolute",
+  "border-radius": "10px"
+}).on({
+  touchmove: function(t) {
+    if(!controll.active)return;
+    var touch = t.touches[0];
+    var ofset = div3.position();
+    var y = ((touch.clientY - ofset.top - (size / 2)) / (size / 2));
+    y = (y < -1) ? -1 : (y > 1) ? 1 : y;
+    controll.translate.y = -y;
+  },
+  touchend: function() {
+    if(!controll.active)return;
+    controll.translate.y = 0;
+  }
+});
+$("body").append(div3);
+
+var div4 = $("<div/>").css({
+  width: size / 4,
+  height: size / 4,
+  right: 10,
+  top: 10,
+  border: "2px solid green",
+  position: "absolute",
+  "border-radius": "10px"
+}).on({touchstart : function() {
+  var elem = document.documentElement;
+  if(!controll.active)retutn;
+  if (controll.isFull) {
+    if (document.exitFullscreen) document.exitFullscreen();
+    else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
+    else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+    else if (document.msExitFullscreen) document.msExitFullscreen();
+    controll.isFull = false;
+  } else {
+    if (elem.requestFullscreen) elem.requestFullscreen();
+    else if (elem.mozRequestFullScreen) elem.mozRequestFullScreen();
+    else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
+    else if (elem.msRequestFullscreen) elem.msRequestFullscreen();
+    canvas.height = scene.getViewport().height = screen.height;
+    controll.isFull = true;
+  }
+}});
+$("body").append(div4);
