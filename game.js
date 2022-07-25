@@ -41,12 +41,14 @@ scene.addItem(cube2, 0, 0, 0);
 scene.addItem(cube.clone(), -7, 0, 0);
 scene.addItem(pyramid, 7, 0, 0);
 
+//Configurações do controle
 var controll = {
   active: true,
   rotate: { x: 0, y: 0, z: 0 },
   translate: { x: 0, y: 0, z: 0 },
   start: { x: 0, y: 0 },
   isMove: false,
+  isTouchpad: false
 }
 
 //Start animação
@@ -133,6 +135,7 @@ $(document).on({
 });
 
 var size = (canvas.width + canvas.height) * 0.08;
+if(controll.isTouchpad){
 var div1 = $("<div/>").css({
   width: canvas.width,
   height: canvas.height,
@@ -210,6 +213,8 @@ var div3 = $("<div/>").css({
 });
 $("body").append(div3);
 
+};
+
 var div4 = $("<div/>").css({
   width: size / 4,
   height: size / 4,
@@ -218,7 +223,7 @@ var div4 = $("<div/>").css({
   border: "2px solid green",
   position: "absolute",
   "border-radius": "10px"
-}).on({touchstart : function() {
+}).click(function() {
   var elem = document.documentElement;
   if(!controll.active)retutn;
   if (controll.isFull) {
@@ -235,5 +240,24 @@ var div4 = $("<div/>").css({
     canvas.height = scene.getViewport().height = screen.height;
     controll.isFull = true;
   }
-}});
+});
 $("body").append(div4);
+
+var span = $("<span/>")
+span.hide().attr("id", "print").css({
+  position: "absolute",
+  bottom: "10px",
+  left: "50%",
+  color: "red",
+  border: "2px solid green",
+  padding: "7px",
+  "border-radius": "10px"
+});
+$("body").append(span);
+
+window.print = function(msg){
+  var print = $("#print");
+  if(msg == null)print.hide();
+   else print.text(msg).show();
+};
+

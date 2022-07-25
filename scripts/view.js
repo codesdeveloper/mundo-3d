@@ -196,7 +196,7 @@ class View {
           ctx.lineTo(c.x, c.y);
           ctx.clip();
           ctx.fill();
-          ctx.stroke();
+          // ctx.stroke();
           var img = document.createElement("img");
           img.src = poly.texture;
           var data = item.getData();
@@ -212,7 +212,7 @@ class View {
           ctx.lineTo(d.x, d.y);
           ctx.clip();
           ctx.fill();
-          ctx.stroke();
+          // ctx.stroke();
           var img = document.createElement("img");
           img.src = poly.texture;
           var data = item.getData();
