@@ -16,6 +16,9 @@ class Entity extends Matrix {
     type: Entity.TYPEPOINTS
   }
 
+
+  disable = false;
+  
   constructor(matrix, lookat) {
     if (matrix && lookat) super(matrix, lookat);
     else super();

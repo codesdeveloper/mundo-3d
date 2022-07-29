@@ -1,16 +1,17 @@
 //Definição de variaveis
-const width = window.innerWidth,
+ const width = window.innerWidth,
   height = window.innerHeight;
 let canvas = document.getElementById("canvas");
 let scene = new Scene();
 let view = new View();
 
-//Configurações do game
+// Configurações do game
 canvas.width = width;
 canvas.height = height;
 scene.setViewport({ width: width, height: height, x: 0, y: 0 });
-scene.getCamera().setPosition(0, 2, -6);
-view.setFPS(60);
+scene.getCamera().setPosition(0, 0, -4);
+view.setFPS
+(60);
 view.setScene(scene);
 view.setCanvas(canvas);
 
@@ -34,12 +35,14 @@ cube2.getPolygonus()[2].texture = "images/terra_lado.png";
 cube2.getPolygonus()[3].texture = "images/terra_lado.png";
 cube2.getPolygonus()[4].texture = "images/terra_cima.jpeg";
 cube2.getPolygonus()[5].texture = "images/terra_baixo.jpg";
+cube2.getStyle().type = Entity.TYPELINES;
+cube2.getStyle().size = 20;
 
 //Adicionar itens no layout
-scene.addItem(plane, 0, -1, 0);
+// scene.addItem(plane, 0, -1, 0);
 scene.addItem(cube2, 0, 0, 0);
-scene.addItem(cube.clone(), -7, 0, 0);
-scene.addItem(pyramid, 7, 0, 0);
+// scene.addItem(cube.clone(), -7, 0, 0);
+// scene.addItem(pyramid, 7, 0, 0);
 
 //Configurações do controle
 var controll = {
@@ -56,18 +59,39 @@ view.frameAnimation(() => {
   var trans = controll.translate;
   var rot = controll.rotate;
   scene.getCamera().translate(trans.x, trans.y, trans.z);
-  scene.getCamera().rotate(rot.x, rot.y, rot.z);
-  cube2.rotate(0.02, 0, 0);
+  // scene.getCamera().rotate(rot.x, rot.y, rot.z);
+  // cube2.rotate(0.02, 0, 0);
   scene.render();
   view.render();
+  
 });
+
+
+
+
+
+
+
 
 //Adicionar Controle
 var lookat = scene.getCamera().getLookat();
 $(document).on({
-  click: function() {
+  click: function(e) {
     if (!controll.active) return;
-
+    // var retorno = view.getClick(e.clientX, e.clientY, 1);
+    
+    // if(retorno != null){
+    //   var item = retorno.entity;
+    //   var ind = retorno.ind;
+      
+    //   var points = item.getPoints();
+    //   print(ind);
+    //   points.splice(ind, 1);
+      
+    // }
+    
+    
+    
   },
   keydown: function(e) {
     if (!controll.active) return;
@@ -118,6 +142,9 @@ $(document).on({
     controll.isMove = true;
   },
   mousemove: function(e) {
+    
+    var retorno = view.getClick(e.clientX, e.clientY, 1);
+    
     if (!controll.active || !controll.isMove) return;
     var c = Math.cos(lookat.y),
       s = Math.sin(lookat.y);
@@ -258,6 +285,5 @@ $("body").append(span);
 window.print = function(msg){
   var print = $("#print");
   if(msg == null)print.hide();
-   else print.text(msg).show();
+   else print.html(msg).show();
 };
-

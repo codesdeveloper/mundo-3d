@@ -32,6 +32,7 @@ class Scene {
 
     for (var i = 0; i < this.getItens().length; ++i) {
       var item = this.getItens()[i];
+      // if(!item.disable)continue;
       var position = item.getPosition();
       item.z = 0;
 
@@ -59,13 +60,15 @@ class Scene {
         coords.push({
           x: vp.width / 2 + out.x * size / dist,
           y: vp.height / 2 + -out.y * size / dist,
-          z: (out.z < 0) ? 0 : out.z
+          z: (out.z < 0) ? 0 : out.z,
+          id: item.getId
         });
         
         item.z += out.z;
 
       }
 
+    /*
       item.sortPolygonus((a, b) => {
         var av = a.vertices,
           bv = b.vertices;
@@ -84,7 +87,7 @@ class Scene {
           
           return (az < bz ? 1 : -1); 
           
-      });
+      });*/
 
       item.setCoords(coords);
       

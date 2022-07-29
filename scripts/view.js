@@ -19,15 +19,74 @@ class View {
   frameAnimation = function(callback) {
     window.setInterval(callback, 1000 / this.#FPS);
   };
+  
+  getClick = function (x, y, rad){
+    
+    var itens = this.#scene.getItens();
+    
+    for(var i = 0;i < itens.length;++i){
+      var item = itens[i];
+      // if(!item.disable)continue;
+      
+      var style = item.getStyle();
+      
+      var coords = Util.cloneObject(item.getCoords());
+      coords.sort(function(a, b){
+        return (a.z > b.z ? -1 : 1)
+      });
+      
+      //search point
+      if(style.type == Entity.TYPEPOINTS)
+      for(var j = 0;j < coords.length;++j){
+        var coord = coords[j];
+        var xx = x - coord.x;
+        var yy = y - coord.y
+        var sqrt = Math.sqrt(xx * xx + yy * yy) / (style.size / (coord.z * 0.2));
+        if(sqrt < 1) return {typo: Entity.TYPEPOINTS, entity: item, ind: j};
+      }
+      
+      // search edges
+      if (style.type == Entity.TYPELINES)
+        // for (var j = 0; j < 1/*item.getEdges().length*/; ++j) {
+          var edge = item.getEdges()[11];
+          
+          var a = coords[edge.a], b = coords[edge.b];
+          
+          var x1 = Math.min(a.x, b.x);
+          var x2 = Math.max(a.x, b.x) - x1;
+          
+          var y1 = Math.min(a.y, b.y);
+          var y2 = Math.max(a.y, b.y) - y1;
+          
+          var indx = (x - x1) / x2;
+          var indy = (y - y1) / y2;
+          
+          
+          var ctx = this.#canvas.getContext("2d");
+          ctx.fillStyle = "red";
+          ctx.fillRect(x1, y1, x2, y2);
+            
+            print(indx + "<br/>" + indy);
+            
+          // if (a.z <= 0 && b.z <= 0) continue
+      
+        
+          
+        // }
+      
+      
+    }
+  };
 
   render = function() {
     var itens = this.#scene.getItens();
     var ctx = this.#canvas.getContext("2d");
     var vp = this.#scene.getViewport();
-    ctx.clearRect(vp.x, vp.y, vp.width, vp.height);
+    // ctx.clearRect(vp.x, vp.y, vp.width, vp.height);
 
     for (var i = 0; i < itens.length; ++i) {
       var item = itens[i];
+      // if(!item.disable)continue;
       var coords = item.getCoords();
       var style = item.getStyle();
 
