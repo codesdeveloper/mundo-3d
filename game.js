@@ -1,5 +1,5 @@
 //Definição de variaveis
- const width = window.innerWidth,
+const width = window.innerWidth,
   height = window.innerHeight;
 let canvas = document.getElementById("canvas");
 let scene = new Scene();
@@ -10,8 +10,7 @@ canvas.width = width;
 canvas.height = height;
 scene.setViewport({ width: width, height: height, x: 0, y: 0 });
 scene.getCamera().setPosition(0, 0, -4);
-view.setFPS
-(60);
+view.setFPS(60);
 view.setScene(scene);
 view.setCanvas(canvas);
 
@@ -39,7 +38,7 @@ cube2.getStyle().type = Entity.TYPELINES;
 cube2.getStyle().size = 20;
 
 //Adicionar itens no layout
-// scene.addItem(plane, 0, -1, 0);
+scene.addItem(plane, 0, -1, 0);
 scene.addItem(cube2, 0, 0, 0);
 // scene.addItem(cube.clone(), -7, 0, 0);
 // scene.addItem(pyramid, 7, 0, 0);
@@ -59,11 +58,11 @@ view.frameAnimation(() => {
   var trans = controll.translate;
   var rot = controll.rotate;
   scene.getCamera().translate(trans.x, trans.y, trans.z);
-  // scene.getCamera().rotate(rot.x, rot.y, rot.z);
+   scene.getCamera().rotate(rot.x, rot.y, rot.z);
   // cube2.rotate(0.02, 0, 0);
   scene.render();
   view.render();
-  view.stopAnimation();
+  //view.stopAnimation();
 });
 
 
@@ -76,27 +75,27 @@ view.frameAnimation(() => {
 //Adicionar Controle
 var lookat = scene.getCamera().getLookat();
 $(document).on({
-  click: function(e) {
+  click: function (e) {
     if (!controll.active) return;
     // var retorno = view.getClick(e.clientX, e.clientY, 1);
-    
+
     // if(retorno != null){
     //   var item = retorno.entity;
     //   var ind = retorno.ind;
-      
+
     //   var points = item.getPoints();
     //   print(ind);
     //   points.splice(ind, 1);
-      
+
     // }
-    
-    
-    
+
+
+
   },
-  keydown: function(e) {
+  keydown: function (e) {
     if (!controll.active) return;
     var c = Math.cos(lookat.y),
-      s = Math.sin(lookat.y);
+      s = Math.sin(lookat.y);console.log(e.keyCode);
     switch (e.keyCode) {
       case 65:
         controll.translate = { x: -c, y: 0, z: s };
@@ -130,21 +129,21 @@ $(document).on({
         break;
     }
   },
-  keyup: function() {
+  keyup: function () {
     if (!controll.active) return;
     controll.translate = { x: 0, y: 0, z: 0 };
     controll.rotate = { x: 0, y: 0, z: 0 };
   },
-  mousedown: function(e) {
+  mousedown: function (e) {
     if (!controll.active) return;
     controll.start.x = e.clientX;
     controll.start.y = e.clientY;
     controll.isMove = true;
   },
-  mousemove: function(e) {
-    
+  mousemove: function (e) {
+
     var retorno = view.getClick(e.clientX, e.clientY, 1);
-    
+
     if (!controll.active || !controll.isMove) return;
     var c = Math.cos(lookat.y),
       s = Math.sin(lookat.y);
@@ -154,7 +153,7 @@ $(document).on({
     y = (y < -10) ? -10 : (y > 10) ? 10 : y;
     controll.rotate = { x: y * -c * 0.005, y: x * 0.005, z: y * s * 0.005 };
   },
-  mouseup: function(e) {
+  mouseup: function (e) {
     if (!controll.active) return;
     controll.isMove = false;
     controll.rotate = { x: 0, y: 0, z: 0 };
@@ -162,83 +161,83 @@ $(document).on({
 });
 
 var size = (canvas.width + canvas.height) * 0.08;
-if(controll.isTouchpad){
-var div1 = $("<div/>").css({
-  width: canvas.width,
-  height: canvas.height,
-  position: "absolute",
-  left: 0,
-  top: 0,
-}).on({
-  touchmove: function(t) {
-    if(!controll.active)return;
-    var touch = t.touches[0];
-    var x = ((touch.clientX - (canvas.width / 2)) / (canvas.width / 2));
-    var y = ((touch.clientY - (canvas.height / 2)) / (canvas.height / 2));
-    x = (x < -1) ? -1 : (x > 1) ? 1 : x;
-    y = (y < -1) ? -1 : (y > 1) ? 1 : y;
-    var c = Math.cos(lookat.y),
-      s = Math.sin(lookat.y);
-    controll.rotate = { x: y * -c * 0.07, y: x * 0.07, z: y * s * 0.07, };
-  },
-  touchend: function() {
-    if(!controll.active)return;
-    controll.rotate = { x: 0, y: 0, z: 0 };
-  }
-});
-$("body").append(div1);
+if (controll.isTouchpad) {
+  var div1 = $("<div/>").css({
+    width: canvas.width,
+    height: canvas.height,
+    position: "absolute",
+    left: 0,
+    top: 0,
+  }).on({
+    touchmove: function (t) {
+      if (!controll.active) return;
+      var touch = t.touches[0];
+      var x = ((touch.clientX - (canvas.width / 2)) / (canvas.width / 2));
+      var y = ((touch.clientY - (canvas.height / 2)) / (canvas.height / 2));
+      x = (x < -1) ? -1 : (x > 1) ? 1 : x;
+      y = (y < -1) ? -1 : (y > 1) ? 1 : y;
+      var c = Math.cos(lookat.y),
+        s = Math.sin(lookat.y);
+      controll.rotate = { x: y * -c * 0.07, y: x * 0.07, z: y * s * 0.07, };
+    },
+    touchend: function () {
+      if (!controll.active) return;
+      controll.rotate = { x: 0, y: 0, z: 0 };
+    }
+  });
+  $("body").append(div1);
 
-var div2 = $("<div/>").css({
-  width: size,
-  height: size,
-  left: 10,
-  bottom: 10,
-  border: "2px solid green",
-  position: "absolute",
-  "border-radius": "10px"
-}).on({
-  touchmove: function(t) {
-    if(!controll.active)return;
-    var touch = t.touches[0];
-    var ofset = div2.position();
-    var x = ((touch.clientX - ofset.left - (size / 2)) / (size / 2));
-    var y = ((touch.clientY - ofset.top - (size / 2)) / (size / 2));
-    x = (x < -1) ? -1 : (x > 1) ? 1 : x;
-    y = (y < -1) ? -1 : (y > 1) ? 1 : y;
-    var c = Math.cos(lookat.y),
-      s = Math.sin(lookat.y);
-    controll.translate = { x: x * c + y * -s, y: 0, z: x * -s + y * -c };
-  },
-  touchend: function() {
-    if(!controll.active)return;
-    controll.translate = { x: 0, y: 0, z: 0 };
-  }
-});
-$("body").append(div2);
+  var div2 = $("<div/>").css({
+    width: size,
+    height: size,
+    left: 10,
+    bottom: 10,
+    border: "2px solid green",
+    position: "absolute",
+    "border-radius": "10px"
+  }).on({
+    touchmove: function (t) {
+      if (!controll.active) return;
+      var touch = t.touches[0];
+      var ofset = div2.position();
+      var x = ((touch.clientX - ofset.left - (size / 2)) / (size / 2));
+      var y = ((touch.clientY - ofset.top - (size / 2)) / (size / 2));
+      x = (x < -1) ? -1 : (x > 1) ? 1 : x;
+      y = (y < -1) ? -1 : (y > 1) ? 1 : y;
+      var c = Math.cos(lookat.y),
+        s = Math.sin(lookat.y);
+      controll.translate = { x: x * c + y * -s, y: 0, z: x * -s + y * -c };
+    },
+    touchend: function () {
+      if (!controll.active) return;
+      controll.translate = { x: 0, y: 0, z: 0 };
+    }
+  });
+  $("body").append(div2);
 
-var div3 = $("<div/>").css({
-  width: size / 2,
-  height: size,
-  right: 10,
-  bottom: 10,
-  border: "2px solid green",
-  position: "absolute",
-  "border-radius": "10px"
-}).on({
-  touchmove: function(t) {
-    if(!controll.active)return;
-    var touch = t.touches[0];
-    var ofset = div3.position();
-    var y = ((touch.clientY - ofset.top - (size / 2)) / (size / 2));
-    y = (y < -1) ? -1 : (y > 1) ? 1 : y;
-    controll.translate.y = -y;
-  },
-  touchend: function() {
-    if(!controll.active)return;
-    controll.translate.y = 0;
-  }
-});
-$("body").append(div3);
+  var div3 = $("<div/>").css({
+    width: size / 2,
+    height: size,
+    right: 10,
+    bottom: 10,
+    border: "2px solid green",
+    position: "absolute",
+    "border-radius": "10px"
+  }).on({
+    touchmove: function (t) {
+      if (!controll.active) return;
+      var touch = t.touches[0];
+      var ofset = div3.position();
+      var y = ((touch.clientY - ofset.top - (size / 2)) / (size / 2));
+      y = (y < -1) ? -1 : (y > 1) ? 1 : y;
+      controll.translate.y = -y;
+    },
+    touchend: function () {
+      if (!controll.active) return;
+      controll.translate.y = 0;
+    }
+  });
+  $("body").append(div3);
 
 };
 
@@ -250,9 +249,9 @@ var div4 = $("<div/>").css({
   border: "2px solid green",
   position: "absolute",
   "border-radius": "10px"
-}).click(function() {
+}).click(function () {
   var elem = document.documentElement;
-  if(!controll.active)retutn;
+  if (!controll.active) retutn;
   if (controll.isFull) {
     if (document.exitFullscreen) document.exitFullscreen();
     else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
@@ -282,8 +281,8 @@ span.hide().attr("id", "print").css({
 });
 $("body").append(span);
 
-window.print = function(msg){
+window.print = function (msg) {
   var print = $("#print");
-  if(msg == null)print.hide();
-   else print.html(msg).show();
+  if (msg == null) print.hide();
+  else print.html(msg).show();
 };

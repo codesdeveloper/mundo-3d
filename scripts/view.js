@@ -31,7 +31,7 @@ class View {
     
     for(var i = 0;i < itens.length;++i){
       var item = itens[i];
-      // if(!item.disable)continue;
+      if(!item.disable)continue;
       
       var style = item.getStyle();
       
@@ -108,29 +108,36 @@ class View {
         }
 
       if (style.type == Entity.TYPELINES)
-        for (var j = 0; j <1/* item.getEdges().length*/; ++j) {
-          var edge = item.getEdges()[0];
+        for (var j = 0; j < item.getEdges().length; ++j) {
+          var edge = item.getEdges()[j];
           var a = coords[edge.a],
             b = coords[edge.b];
-          if (a.z <= 0 && b.z <= 0) continue
+        //  if (a.z <= 0 && b.z <= 0) continue;
 
-          var ind = (a.z + b.z) * 0.5;
-          if (ind < 1) ind = 1;
+  //        var ind = (a.z + b.z) * 0.5;
+     //     if (ind < 1) ind = 1;
           //ctx.lineWidth = style.size / ind;
 
           ctx.beginPath();
 
-
           var s = 10 / 2;
 
-          ctx.moveTo((a.x - s), (a.y - s));
-          ctx.lineTo((b.x - s), (b.y - s));  
-
-          ctx.lineTo((b.x + s), (b.y + s));
-          //ctx.lineTo((a.x + s), (a.y + s));
-
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);  
           ctx.stroke();
        
+          //função de teste
+          ctx.fillStyle = "red";
+          ctx.save();
+          
+          
+          
+
+          ctx.transform(b.x - a.x, b.y - a.y, 1, 5, a.x, a.y)
+          //ctx.fillRect(0, 0, 1, 1);
+          ctx.restore();
+
+
           
          // ctx.fill();
 

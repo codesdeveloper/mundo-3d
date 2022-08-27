@@ -4,40 +4,42 @@ class Scene {
   #viewport = { width: 950, heigth: 500, x: 0, y: 0 };
   #itens = [];
 
-  getCamera = function() {
+  getCamera = function () {
     return this.#camera;
   }
 
-  getViewport = function() {
+  getViewport = function () {
     return this.#viewport;
   }
 
-  getItens = function() {
+  getItens = function () {
     return this.#itens;
   }
 
-  addItem = function(item, x, y, z) {
+  addItem = function (item, x, y, z) {
     if (x != null && y != null && z != null) item.setPosition(x, y, z);
     this.#itens.push(item);
   };
 
-  setViewport = function(vp) {
+  setViewport = function (vp) {
     this.#viewport = vp;
   }
 
-  render = function() {
+  render = function () {
 
     var vp = this.getViewport();
     var cposition = this.getCamera().getPosition();
 
     for (var i = 0; i < this.getItens().length; ++i) {
       var item = this.getItens()[i];
-      // if(!item.disable)continue;
+      //if (!item.disable) continue;
+
       var position = item.getPosition();
+      var coords = [];          
+    
       item.z = 0;
 
-      var coords = [];
-
+      //renderizar pontos
       for (var j = 0; j < item.getPoints().length; ++j) {
         var point = item.getPoints()[j];
         var out = item.transform(point.x, point.y, point.z);
@@ -45,12 +47,11 @@ class Scene {
           position.x + out.x - cposition.x,
           position.y + out.y - cposition.y,
           position.z + out.z - cposition.z);
-          
-          var mat2 = new Matrix();
-          mat2.rotate(out.y * 0.0001, out.x * 0.0001, 0);
-          out = mat2.transform(out.x, out.y, out.z);
-          
-          
+
+        //usado para consertar rotação ao mover
+        var mat2 = new Matrix();
+        mat2.rotate(out.y * 0.0001, out.x * 0.0001, 0);
+        out = mat2.transform(out.x, out.y, out.z);
 
         var dist = (out.z) * 0.07;
         var size = (vp.width + vp.height) * 0.04;
@@ -63,43 +64,42 @@ class Scene {
           z: (out.z < 0) ? 0 : out.z,
           id: item.getId
         });
-        
-        item.z += out.z;
 
+        item.z += out.z;
       }
 
-    /*
-      item.sortPolygonus((a, b) => {
-        var av = a.vertices,
-          bv = b.vertices;
-          
-          var ax = (coords[av[0]].x + coords[av[1]].x + coords[av[2]].x + coords[av[3]].x) / 4;
-          var bx = (coords[bv[0]].x + coords[bv[1]].x + coords[bv[2]].x + coords[bv[3]].x) / 4;
-          
-          var ay = (coords[av[0]].y + coords[av[1]].y + coords[av[2]].y + coords[av[3]].y) / 4;
-          var by = (coords[bv[0]].y + coords[bv[1]].y + coords[bv[2]].y + coords[bv[3]].y) / 4;
-          
-          var az = (coords[av[0]].z + coords[av[1]].z + coords[av[2]].z + coords[av[3]].z) / 4;
-          var bz = (coords[bv[0]].z + coords[bv[1]].z + coords[bv[2]].z + coords[bv[3]].z) / 4;
-          
-          var ar = Math.abs(Math.sqrt(ax * ax + ay * ay + az * az));
-          var br = Math.abs(Math.sqrt(bx * bx + by * by + bz * bz));
-          
-          return (az < bz ? 1 : -1); 
-          
-      });*/
+      /*
+        item.sortPolygonus((a, b) => {
+          var av = a.vertices,
+            bv = b.vertices;
+            
+            var ax = (coords[av[0]].x + coords[av[1]].x + coords[av[2]].x + coords[av[3]].x) / 4;
+            var bx = (coords[bv[0]].x + coords[bv[1]].x + coords[bv[2]].x + coords[bv[3]].x) / 4;
+            
+            var ay = (coords[av[0]].y + coords[av[1]].y + coords[av[2]].y + coords[av[3]].y) / 4;
+            var by = (coords[bv[0]].y + coords[bv[1]].y + coords[bv[2]].y + coords[bv[3]].y) / 4;
+            
+            var az = (coords[av[0]].z + coords[av[1]].z + coords[av[2]].z + coords[av[3]].z) / 4;
+            var bz = (coords[bv[0]].z + coords[bv[1]].z + coords[bv[2]].z + coords[bv[3]].z) / 4;
+            
+            var ar = Math.abs(Math.sqrt(ax * ax + ay * ay + az * az));
+            var br = Math.abs(Math.sqrt(bx * bx + by * by + bz * bz));
+            
+            return (az < bz ? 1 : -1); 
+            
+        });*/
 
       item.setCoords(coords);
-      
-      
-      
+
+
+
     }
-    
+
     this.getItens().sort((a, b) => {
       return (a.z < b.z ? 1 : -1);
     })
-    
-    
+
+
   };
 
 }

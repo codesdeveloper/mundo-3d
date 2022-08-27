@@ -1,7 +1,4 @@
 
-
-
-
 const Util = {
 
   cloneObject: function(object) {
