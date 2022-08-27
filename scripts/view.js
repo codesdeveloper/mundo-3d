@@ -3,6 +3,7 @@ class View {
   #FPS;
   #canvas;
   #scene;
+  #animation;
 
   setScene = function(scene) {
     this.#scene = scene;
@@ -17,9 +18,13 @@ class View {
   };
 
   frameAnimation = function(callback) {
-    window.setInterval(callback, 1000 / this.#FPS);
+    this.#animation = window.setInterval(callback, 1000 / this.#FPS);
   };
   
+  stopAnimation = function(){
+    window.clearInterval(this.#animation);
+  }
+
   getClick = function (x, y, rad){
     
     var itens = this.#scene.getItens();
@@ -64,7 +69,7 @@ class View {
           
           var ctx = this.#canvas.getContext("2d");
           ctx.fillStyle = "red";
-          ctx.fillRect(x1, y1, x2, y2);
+          //ctx.fillRect(x1, y1, x2, y2);
             
             print(indx + "<br/>" + indy);
             
@@ -82,7 +87,7 @@ class View {
     var itens = this.#scene.getItens();
     var ctx = this.#canvas.getContext("2d");
     var vp = this.#scene.getViewport();
-    // ctx.clearRect(vp.x, vp.y, vp.width, vp.height);
+     ctx.clearRect(vp.x, vp.y, vp.width, vp.height);
 
     for (var i = 0; i < itens.length; ++i) {
       var item = itens[i];
@@ -99,24 +104,37 @@ class View {
           if (coord.z <= 0) continue;
           ctx.beginPath();
           ctx.arc(coord.x, coord.y, style.size / (coord.z * 0.2), 0, Math.PI * 2);
-          ctx.fill();
+          //ctx.fill();
         }
 
       if (style.type == Entity.TYPELINES)
-        for (var j = 0; j < item.getEdges().length; ++j) {
-          var edge = item.getEdges()[j];
+        for (var j = 0; j <1/* item.getEdges().length*/; ++j) {
+          var edge = item.getEdges()[0];
           var a = coords[edge.a],
             b = coords[edge.b];
           if (a.z <= 0 && b.z <= 0) continue
 
           var ind = (a.z + b.z) * 0.5;
           if (ind < 1) ind = 1;
-          ctx.lineWidth = style.size / ind;
+          //ctx.lineWidth = style.size / ind;
 
           ctx.beginPath();
-          ctx.moveTo(a.x, a.y);
-          ctx.lineTo(b.x, b.y);
+
+
+          var s = 10 / 2;
+
+          ctx.moveTo((a.x - s), (a.y - s));
+          ctx.lineTo((b.x - s), (b.y - s));  
+
+          ctx.lineTo((b.x + s), (b.y + s));
+          //ctx.lineTo((a.x + s), (a.y + s));
+
           ctx.stroke();
+       
+          
+         // ctx.fill();
+
+           //ctx.stroke();
         }
 
       if (style.type == Entity.TYPEPOLYGONUS)

@@ -63,7 +63,7 @@ view.frameAnimation(() => {
   // cube2.rotate(0.02, 0, 0);
   scene.render();
   view.render();
-  
+  view.stopAnimation();
 });
 
 
