@@ -32,11 +32,11 @@ class Scene {
 
     for (var i = 0; i < this.getItens().length; ++i) {
       var item = this.getItens()[i];
-      //if (!item.disable) continue;
+      if (item.disable) continue;
 
       var position = item.getPosition();
-      var coords = [];          
-    
+      var coords = [];
+
       item.z = 0;
 
       //renderizar pontos
@@ -62,7 +62,8 @@ class Scene {
           x: vp.width / 2 + out.x * size / dist,
           y: vp.height / 2 + -out.y * size / dist,
           z: (out.z < 0) ? 0 : out.z,
-          id: item.getId
+          id: item.getId,
+          path: null
         });
 
         item.z += out.z;

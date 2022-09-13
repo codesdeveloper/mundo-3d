@@ -24,8 +24,8 @@ var cube2 = cube.clone();
 plane.setStyle({ color: [255, 255, 255], size: 10, type: Entity.TYPELINES });
 cube.setStyle({ color: [0, 0, 255], size: 10, type: Entity.TYPELINES });
 pyramid.getStyle().color = [255, 255, 255];
-pyramid.getStyle().type = Entity.TYPEPOLYGONUS;
-cube2.setStyle({ color: [0, 255, 0], size: 10, type: Entity.TYPEPOLYGONUS });
+pyramid.getStyle().type = Entity.TYPEPOINTS;
+cube2.setStyle({ color: [0, 255, 0], size: 10, type: Entity.TYPEPOINTS });
 cube2.getPolygonus()[0].color = [255, 0, 0];
 cube2.getStyle().color = [0, 0, 255];
 cube2.getPolygonus()[0].texture = "images/terra_lado.png";
@@ -34,14 +34,14 @@ cube2.getPolygonus()[2].texture = "images/terra_lado.png";
 cube2.getPolygonus()[3].texture = "images/terra_lado.png";
 cube2.getPolygonus()[4].texture = "images/terra_cima.jpeg";
 cube2.getPolygonus()[5].texture = "images/terra_baixo.jpg";
-cube2.getStyle().type = Entity.TYPELINES;
+//cube2.getStyle().type = Entity.TYPELINES;
 cube2.getStyle().size = 20;
 
 //Adicionar itens no layout
 scene.addItem(plane, 0, -1, 0);
 scene.addItem(cube2, 0, 0, 0);
 // scene.addItem(cube.clone(), -7, 0, 0);
-// scene.addItem(pyramid, 7, 0, 0);
+//scene.addItem(pyramid, 7, 0, 0);
 
 //Configurações do controle
 var controll = {
@@ -57,8 +57,8 @@ var controll = {
 view.frameAnimation(() => {
   var trans = controll.translate;
   var rot = controll.rotate;
-  scene.getCamera().translate(trans.x, trans.y, trans.z);
-   scene.getCamera().rotate(rot.x, rot.y, rot.z);
+  scene.getCamera().translate(trans.x * 0.1, trans.y * 0.1, trans.z * 0.1);
+   scene.getCamera().rotate(rot.x * 0.1, rot.y * 0.1, rot.z * 0.1);
   // cube2.rotate(0.02, 0, 0);
   scene.render();
   view.render();
@@ -77,17 +77,17 @@ var lookat = scene.getCamera().getLookat();
 $(document).on({
   click: function (e) {
     if (!controll.active) return;
-    // var retorno = view.getClick(e.clientX, e.clientY, 1);
+     var retorno = view.getClick(e.clientX, e.clientY);
+      
+     if(retorno != null){
+      var item = retorno.entity;
+       var ind = retorno.ind;
 
-    // if(retorno != null){
-    //   var item = retorno.entity;
-    //   var ind = retorno.ind;
+       var points = item.getPoints();
+       print(ind);
+       points.splice(ind, 1);
 
-    //   var points = item.getPoints();
-    //   print(ind);
-    //   points.splice(ind, 1);
-
-    // }
+     }
 
 
 
@@ -95,7 +95,7 @@ $(document).on({
   keydown: function (e) {
     if (!controll.active) return;
     var c = Math.cos(lookat.y),
-      s = Math.sin(lookat.y);console.log(e.keyCode);
+      s = Math.sin(lookat.y);
     switch (e.keyCode) {
       case 65:
         controll.translate = { x: -c, y: 0, z: s };
@@ -286,3 +286,22 @@ window.print = function (msg) {
   if (msg == null) print.hide();
   else print.html(msg).show();
 };
+
+
+
+var prom = new Promise((sucess, erro) => {
+
+
+  var ii = false;
+
+
+  if(ii){
+    sucess("foi um sucesso")
+  }else{
+    erro("foi um fracasso");
+  }
+
+});
+
+
+

@@ -25,13 +25,13 @@ class View {
     window.clearInterval(this.#animation);
   }
 
-  getClick = function (x, y, rad){
+  getClick = function (x, y){
     
     var itens = this.#scene.getItens();
     
     for(var i = 0;i < itens.length;++i){
       var item = itens[i];
-      if(!item.disable)continue;
+      if(item.disable)continue;
       
       var style = item.getStyle();
       
@@ -44,9 +44,15 @@ class View {
       if(style.type == Entity.TYPEPOINTS)
       for(var j = 0;j < coords.length;++j){
         var coord = coords[j];
-        var xx = x - coord.x;
-        var yy = y - coord.y
-        var sqrt = Math.sqrt(xx * xx + yy * yy) / (style.size / (coord.z * 0.2));
+        
+        if(this.context.isPointInPath(coord.path, x, y)){
+            return{
+              type: Entity.TYPEPOINTS,
+              entity: item,
+              ind: j
+            }
+        };
+
         if(sqrt < 1) return {typo: Entity.TYPEPOINTS, entity: item, ind: j};
       }
       
@@ -68,10 +74,11 @@ class View {
           
           
           var ctx = this.#canvas.getContext("2d");
+          this.context = ctx;
           ctx.fillStyle = "red";
           //ctx.fillRect(x1, y1, x2, y2);
             
-            print(indx + "<br/>" + indy);
+           // print(indx + "<br/>" + indy);
             
           // if (a.z <= 0 && b.z <= 0) continue
       
@@ -91,7 +98,7 @@ class View {
 
     for (var i = 0; i < itens.length; ++i) {
       var item = itens[i];
-      // if(!item.disable)continue;
+      if(item.disable)continue;
       var coords = item.getCoords();
       var style = item.getStyle();
 
@@ -102,9 +109,12 @@ class View {
         for (var j = 0; j < coords.length; ++j) {
           var coord = coords[j];
           if (coord.z <= 0) continue;
-          ctx.beginPath();
-          ctx.arc(coord.x, coord.y, style.size / (coord.z * 0.2), 0, Math.PI * 2);
-          //ctx.fill();
+
+          var path = new Path2D();
+          path.arc(coord.x, coord.y, style.size / (coord.z * 0.2), 0, Math.PI * 2);
+          ctx.fill(path);
+
+          coord.path = path;
         }
 
       if (style.type == Entity.TYPELINES)
@@ -112,7 +122,7 @@ class View {
           var edge = item.getEdges()[j];
           var a = coords[edge.a],
             b = coords[edge.b];
-        //  if (a.z <= 0 && b.z <= 0) continue;
+          if (a.z <= 0 && b.z <= 0) continue;
 
   //        var ind = (a.z + b.z) * 0.5;
      //     if (ind < 1) ind = 1;
@@ -134,7 +144,7 @@ class View {
           
 
           ctx.transform(b.x - a.x, b.y - a.y, 1, 5, a.x, a.y)
-          //ctx.fillRect(0, 0, 1, 1);
+          //6ctx.fillRect(0, 0, 1, 1);
           ctx.restore();
 
 
