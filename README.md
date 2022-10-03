@@ -10,6 +10,7 @@ aplicação web de matriz 3d de objetos
 * [x] Configura controle window e phone
 * [x] Configurar draw image
 * [ ] Arrumar draw image
+* [ ] Criar sistema para salver em local storage
 * [x] Configurar rotate image draw
 * [ ] Configurar luzes nos objetos
 * [ ] draw image com uvls
