@@ -21,22 +21,29 @@ class Scene {
     this.#itens.push(item);
   };
 
+  remove = function(item){
+    this.#itens = this.#itens.filter(e => {
+        if(e != item) return e;
+    })
+  }
+
   setViewport = function (vp) {
     this.#viewport = vp;
   }
 
-  render = function () {
+  setCamera = function(matrix){
+    this.#camera = matrix;
+  }
 
+  render = function () {
     var vp = this.getViewport();
     var cposition = this.getCamera().getPosition();
 
     for (var i = 0; i < this.getItens().length; ++i) {
       var item = this.getItens()[i];
       if (item.disable) continue;
-
       var position = item.getPosition();
       var coords = [];
-
       item.z = 0;
 
       //renderizar pontos
@@ -69,31 +76,27 @@ class Scene {
         item.z += out.z;
       }
 
-      /*
-        item.sortPolygonus((a, b) => {
-          var av = a.vertices,
-            bv = b.vertices;
-            
-            var ax = (coords[av[0]].x + coords[av[1]].x + coords[av[2]].x + coords[av[3]].x) / 4;
-            var bx = (coords[bv[0]].x + coords[bv[1]].x + coords[bv[2]].x + coords[bv[3]].x) / 4;
-            
-            var ay = (coords[av[0]].y + coords[av[1]].y + coords[av[2]].y + coords[av[3]].y) / 4;
-            var by = (coords[bv[0]].y + coords[bv[1]].y + coords[bv[2]].y + coords[bv[3]].y) / 4;
-            
-            var az = (coords[av[0]].z + coords[av[1]].z + coords[av[2]].z + coords[av[3]].z) / 4;
-            var bz = (coords[bv[0]].z + coords[bv[1]].z + coords[bv[2]].z + coords[bv[3]].z) / 4;
-            
-            var ar = Math.abs(Math.sqrt(ax * ax + ay * ay + az * az));
-            var br = Math.abs(Math.sqrt(bx * bx + by * by + bz * bz));
-            
-            return (az < bz ? 1 : -1); 
-            
-        });*/
+      item.sortPolygonus((a, b) => {
+        var av = a.vertices,
+          bv = b.vertices;
+
+        var ax = (coords[av[0]].x + coords[av[1]].x + coords[av[2]].x + coords[av[3]].x) / 4;
+        var bx = (coords[bv[0]].x + coords[bv[1]].x + coords[bv[2]].x + coords[bv[3]].x) / 4;
+
+        var ay = (coords[av[0]].y + coords[av[1]].y + coords[av[2]].y + coords[av[3]].y) / 4;
+        var by = (coords[bv[0]].y + coords[bv[1]].y + coords[bv[2]].y + coords[bv[3]].y) / 4;
+
+        var az = (coords[av[0]].z + coords[av[1]].z + coords[av[2]].z + coords[av[3]].z) / 4;
+        var bz = (coords[bv[0]].z + coords[bv[1]].z + coords[bv[2]].z + coords[bv[3]].z) / 4;
+
+        var ar = Math.abs(Math.sqrt(ax * ax + ay * ay + az * az));
+        var br = Math.abs(Math.sqrt(bx * bx + by * by + bz * bz));
+
+        return (az < bz ? 1 : -1);
+
+      });
 
       item.setCoords(coords);
-
-
-
     }
 
     this.getItens().sort((a, b) => {

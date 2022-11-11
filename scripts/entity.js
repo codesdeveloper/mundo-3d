@@ -13,7 +13,7 @@ class Entity extends Matrix {
   #style = {
     color: [160, 160, 160],
     size: 15,
-    type: Entity.TYPEPOINTS
+    type: Entity.TYPEPOLYGONUS
   }
 
 

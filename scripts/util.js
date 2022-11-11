@@ -73,7 +73,8 @@ const Textures = {
         points.push({ x: x, y: 0, z: z });
         if (x > -w / 2) edges.push({ a: ind, b: ind - 1 });
         if (z < h / 2) edges.push({ a: ind, b: ind - w - 1 });
-        if (x > w / 2 && x < h / 2) polygonus.push([{ vertices: [ind - w - 2, ind - w - 1, ind, ind - 1] }]);
+        if (x > -w / 2 && z < h / 2) polygonus.push({ vertices: [ind - w - 2, ind - w - 1, ind, ind - 1] });
+        console.log();
         ++ind;
       }
     }
@@ -81,6 +82,7 @@ const Textures = {
     item.setPoints(points);
     item.setEdges(edges);
     item.setPolygonus(polygonus);
+    
     return item;
   },
 

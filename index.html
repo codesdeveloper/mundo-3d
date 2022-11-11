@@ -1,20 +1,247 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Mundo 3D</title>
+  <link rel="stylesheet" href="control.css">
 </head>
 
-<body style="margin:0;">
+<body style="margin:0;overflow: hidden;">
   <canvas style="background: #888;" id="canvas"></canvas>
-  
+
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="scripts/util.js"></script>
   <script src="scripts/matrix.js"></script>
   <script src="scripts/entity.js"></script>
   <script src="scripts/scene.js"></script>
   <script src="scripts/view.js"></script>
+  <script src="controler.js"></script>
+
+  <script>
+
+
+
+
+    /*
+    let Control = function (scene) {
+      config = {
+        active: true,
+        rotate: { x: 0, y: 0, z: 0 },
+        translate: { x: 0, y: 0, z: 0 },
+        start: { x: 0, y: 0 },
+        isMove: false,
+        isTouchpad: false,
+        lookat: { x: 0, y: 0, z: 0 },
+        longclick: null,
+        itens: []
+      }
+
+      //load scene of local storage
+
+      let scene_lookat = window.localStorage.getItem('scene_lookat');
+      if(scene_lookat != null){
+        let obj = JSON.parse(scene_lookat);
+        scene.setCamera(new Matrix(obj.data, obj.lookat));
+      }
+
+      let scene_position = window.localStorage.getItem('scene_position');
+      if(scene_position != null){
+        let obj = JSON.parse(scene_position);
+        scene.getCamera().setPosition(obj.x, obj.y, obj.z);
+      }
+
+      let itens_scene = window.localStorage.getItem('itens_scene');
+      if (itens_scene != null) {
+        let itens = JSON.parse(itens_scene);
+        if (itens.length > 0) {
+          config.itens = itens;
+          itens.map(e => {
+            scene.addItem(new Textures.createCube(), e.x, e.y, e.z);
+          })
+        }
+      }
+
+      $('.refresh').click(() => {
+        let is = confirm('Deseja excluir todos os itens?');
+        if(is){
+          window.localStorage.removeItem('itens_scene');
+          window.localStorage.removeItem('scene_position');
+          window.localStorage.removeItem('scene_lookat');
+          config.itens = [];
+          window.location.reload();
+        }
+      })
+
+      $('.full').click(function () {
+        var elem = document.documentElement;
+        if (!config.active) retutn;
+        if (config.isFull) {
+          if (document.exitFullscreen) document.exitFullscreen();
+          else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
+          else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+          else if (document.msExitFullscreen) document.msExitFullscreen();
+          config.isFull = false;
+        } else {
+          if (elem.requestFullscreen) elem.requestFullscreen();
+          else if (elem.mozRequestFullScreen) elem.mozRequestFullScreen();
+          else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
+          else if (elem.msRequestFullscreen) elem.msRequestFullscreen();
+          canvas.height = scene.getViewport().height = screen.height;
+          config.isFull = true;
+        }
+      });
+
+      window.toast = function (msg) {
+        var toast = $("#toast");
+        if (msg == null) toast.hide();
+        else toast.html(msg).show();
+      };
+
+      $(document).on({
+        click: function (e) {
+          if (!config.active) return;
+          var retorno = view.getClick(e.clientX, e.clientY);
+
+          if (retorno == null) return;
+          var item = retorno.entity;
+          var ind = retorno.ind;
+
+          let points = item.getPoints();
+          let pos = item.getPosition();
+
+          let polys = item.getPolygonus();
+          let verts = polys[ind].vertices;
+
+          let a = points[verts[0]];
+          let b = points[verts[1]];
+          let c = points[verts[2]];
+          let d = points[verts[3]];
+
+          let x = (a.x + b.x + c.x + d.x) / 4;
+          let y = (a.y + b.y + c.y + d.y) / 4;
+          let z = (a.z + b.z + c.z + d.z) / 4;
+
+          scene.addItem(new Textures.createCube(), (pos.x + (x * 2)), (pos.y + (y * 2)), (pos.z + (z * 2)));
+          config.itens.push({ type: 'cube', x: (pos.x + (x * 2)), y: (pos.y + (y * 2)), z: (pos.z + (z * 2)) });
+          window.localStorage.setItem('itens_scene', JSON.stringify(config.itens));
+        },
+
+        keydown: function (e) {
+          if (!config.active) return;
+          var c = Math.cos(config.lookat.y),
+            s = Math.sin(config.lookat.y);
+          switch (e.keyCode) {
+            case 65:
+              config.translate = { x: -c, y: 0, z: s };
+              break;
+            case 68:
+              config.translate = { x: c, y: 0, z: -s };
+              break;
+            case 87:
+              config.translate = { x: s, y: 0, z: c };
+              break;
+            case 83:
+              config.translate = { x: -s, y: 0, z: -c };
+              break;
+            case 69:
+              config.translate.y = 1;
+              break;
+            case 81:
+              config.translate.y = -1;
+              break;
+            case 37:
+              config.rotate.y = -0.1;
+              break;
+            case 39:
+              config.rotate.y = 0.1;
+              break;
+            case 38:
+              config.rotate = { x: 0.1 * c, y: 0, z: 0.1 * -s };
+              break;
+            case 40:
+              config.rotate = { x: 0.1 * -c, y: 0, z: 0.1 * s };
+              break;
+          }
+
+          let cam = scene.getCamera();
+          window.localStorage.setItem('scene_position', JSON.stringify(cam.getPosition()));
+          window.localStorage.setItem('scene_lookat', JSON.stringify({lookat: cam.getLookat(), data: cam.getData()}));
+        },
+
+        keyup: function () {
+          if (!config.active) return;
+          config.translate = { x: 0, y: 0, z: 0 };
+          config.rotate = { x: 0, y: 0, z: 0 };
+        },
+
+        mousedown: function (e) {
+          if (!config.active) return;
+          config.start.x = e.clientX;
+          config.start.y = e.clientY;
+          config.isMove = true;
+          config.longclick = window.setInterval(() => {
+            let retorno = view.getClick(e.clientX, e.clientY);
+            if (retorno == null) return;
+            var item = retorno.entity;
+            scene.remove(item);
+            let pos = item.getPosition();
+            config.itens = config.itens.filter(e => {
+              if (e.x == pos.x && e.y == pos.y && e.z == pos.z);
+              else return e;
+            })
+            window.localStorage.setItem('itens_scene', JSON.stringify(config.itens));
+          }, 700);
+        },
+
+        mousemove: function (e) {
+          if (!config.active || !config.isMove) return;
+          var c = Math.cos(config.lookat.y),
+            s = Math.sin(config.lookat.y);
+          var x = (e.clientX - config.start.x);
+          var y = (e.clientY - config.start.y);
+          x = (x < -10) ? -10 : (x > 10) ? 10 : x;
+          y = (y < -10) ? -10 : (y > 10) ? 10 : y;
+          config.rotate = { x: y * -c * 0.005, y: x * 0.005, z: y * s * 0.005 };
+          let cam = scene.getCamera();
+          window.localStorage.setItem('scene_lookat', JSON.stringify({lookat: cam.getLookat(), data: cam.getData()}));
+        },
+
+        mouseup: function (e) {
+          if (!config.active) return;
+          config.isMove = false;
+          config.rotate = { x: 0, y: 0, z: 0 };
+          window.clearInterval(config.longclick);
+        }
+      });
+
+      //touchpad mobile controller
+      if (config.isTouchpad) {
+        $('.move-full').show().on({
+          touchmove: function (t) {
+            if (!config.active) return;
+            var touch = t.touches[0];
+            var x = ((touch.clientX - (canvas.width / 2)) / (canvas.width / 2));
+            var y = ((touch.clientY - (canvas.height / 2)) / (canvas.height / 2));
+            x = (x < -1) ? -1 : (x > 1) ? 1 : x;
+            y = (y < -1) ? -1 : (y > 1) ? 1 : y;
+            var c = Math.cos(lookat.y),
+              s = Math.sin(lookat.y);
+            config.rotate = { x: y * -c * 0.07, y: x * 0.07, z: y * s * 0.07, };
+          },
+          touchend: function () {
+            if (!config.active) return;
+            config.rotate = { x: 0, y: 0, z: 0 };
+          }
+        })
+      }
+
+    }
+  
+  */
+
+  </script>
+
   <script src="game.js"></script>
 
 </body>
