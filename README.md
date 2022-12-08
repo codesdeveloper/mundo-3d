@@ -1,12 +1,6 @@
 # mundo-3d
 aplicação web de matriz 3d de objetos
 
-
-
-#problema na criaçao de linhas para clicar, depois buscar uma forma de executar
-
-#montando click no momento
-
 * [ ] Configurar draw image
 * [ ] Arrumar draw image
 * [ ] Configurar luzes nos objetos

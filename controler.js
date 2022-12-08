@@ -69,7 +69,9 @@ class Control {
     <label class="modal-close"><i class="bi bi-x"></i></label><div class="modal-list"></div></div>   
     <label class="full"><input type="checkbox" class="full-check"><i class="a bi bi-arrows-fullscreen"></i>
     <i class="b bi bi-arrows-angle-contract"></i></label><div class="refresh"><i class="bi bi-arrow-clockwise"></i></div>
-    <span id="toast"></span><span class="cicle"><span class="cicle-on"></span></span>`));
+    <span id="toast"></span><span class="cicle"><span class="cicle-on"></span></span>
+    <div class="imgs-controll"><span class="keyboard"><img src="images/keyboard.png"></span><span class="mouse">
+    <img src="images/mouse.png"></span></div>`));
 
     let itens_list = $('.itens-list');
     for (let i = 0; i < 9; i++) {
@@ -106,13 +108,19 @@ class Control {
 
   init = () => {
 
-
     //load scene of local storage
     let itens = window.localStorage.getItem('itens_show');
     if (itens != null) this.itens_show = JSON.parse(itens);
 
     this.#initHtml();
     $(".control").show();
+
+    let div = document.querySelector('.imgs-controll');
+    div.style.display = 'flex';
+
+    setTimeout(() => {
+      div.style.display = 'none';
+    }, 2000);
 
     //add efect check list
     $('#itens-list').change(() => {
