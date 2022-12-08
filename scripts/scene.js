@@ -1,7 +1,7 @@
 class Scene {
 
   #camera = new Matrix();
-  #viewport = { width: 950, heigth: 500, x: 0, y: 0 };
+  #viewport = { width: 950, heigth: 500, x: 0, y: 0, z: 50 };
   #itens = [];
 
   getCamera = function () {
@@ -21,9 +21,9 @@ class Scene {
     this.#itens.push(item);
   };
 
-  remove = function(item){
+  remove = function (item) {
     this.#itens = this.#itens.filter(e => {
-        if(e != item) return e;
+      if (e != item) return e;
     })
   }
 
@@ -31,7 +31,7 @@ class Scene {
     this.#viewport = vp;
   }
 
-  setCamera = function(matrix){
+  setCamera = function (matrix) {
     this.#camera = matrix;
   }
 
@@ -47,8 +47,7 @@ class Scene {
       item.z = 0;
 
       //renderizar pontos
-      for (var j = 0; j < item.getPoints().length; ++j) {
-        var point = item.getPoints()[j];
+      item.getPoints().map(point => {
         var out = item.transform(point.x, point.y, point.z);
         out = this.getCamera().transform(
           position.x + out.x - cposition.x,
@@ -57,11 +56,11 @@ class Scene {
 
         //usado para consertar rotação ao mover
         var mat2 = new Matrix();
-        mat2.rotate(out.y * 0.0001, out.x * 0.0001, 0);
+        mat2.rotate(out.y * 0.001, out.x * 0.001, 0);
         out = mat2.transform(out.x, out.y, out.z);
 
         var dist = (out.z) * 0.07;
-        var size = (vp.width + vp.height) * 0.04;
+        var size = (vp.width + vp.height) * 0.06;
 
         if (dist <= 0) dist = 0.0001;
 
@@ -69,31 +68,37 @@ class Scene {
           x: vp.width / 2 + out.x * size / dist,
           y: vp.height / 2 + -out.y * size / dist,
           z: (out.z < 0) ? 0 : out.z,
-          id: item.getId,
-          path: null
+          path: null,
         });
 
         item.z += out.z;
-      }
+      });
+
+      //renderizar polygonus
+      item.getPolygonus().map(poly => {
+        let dir = poly.direction;
+
+        var out = poly.coords = item.transform(dir.x, dir.y, dir.z);
+        poly.wordCoords = this.getCamera().transform(
+          out.x,
+          out.y,
+          out.z);
+
+      })
 
       item.sortPolygonus((a, b) => {
-        var av = a.vertices,
-          bv = b.vertices;
 
-        var ax = (coords[av[0]].x + coords[av[1]].x + coords[av[2]].x + coords[av[3]].x) / 4;
-        var bx = (coords[bv[0]].x + coords[bv[1]].x + coords[bv[2]].x + coords[bv[3]].x) / 4;
 
-        var ay = (coords[av[0]].y + coords[av[1]].y + coords[av[2]].y + coords[av[3]].y) / 4;
-        var by = (coords[bv[0]].y + coords[bv[1]].y + coords[bv[2]].y + coords[bv[3]].y) / 4;
 
-        var az = (coords[av[0]].z + coords[av[1]].z + coords[av[2]].z + coords[av[3]].z) / 4;
-        var bz = (coords[bv[0]].z + coords[bv[1]].z + coords[bv[2]].z + coords[bv[3]].z) / 4;
+        let ca = a.coords;
+        let cb = b.coords;
 
-        var ar = Math.abs(Math.sqrt(ax * ax + ay * ay + az * az));
-        var br = Math.abs(Math.sqrt(bx * bx + by * by + bz * bz));
-
-        return (az < bz ? 1 : -1);
-
+        if(ca.z < cb.z)return 1;
+        else if(ca.z > cb.z)return -1
+        else if(ca.y < cb.y)return -1;
+        else if(ca.y > cb.y)return 1;
+        else if(ca.x > cb.x)return -1;
+        else return 1;
       });
 
       item.setCoords(coords);

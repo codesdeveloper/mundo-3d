@@ -3,7 +3,7 @@ class Entity extends Matrix {
   static TYPEPOINTS = 0.002;
   static TYPELINES = 0.005;
   static TYPEPOLYGONUS = 0.009;
-  
+
   #points = [];
   #edges = [];
   #polygonus = [];
@@ -13,82 +13,93 @@ class Entity extends Matrix {
   #style = {
     color: [160, 160, 160],
     size: 15,
-    type: Entity.TYPEPOLYGONUS
+    type: Entity.TYPEPOLYGONUS,
+    twoSides: false,
+    shine: 1
   }
 
-
   disable = false;
-  
+
   constructor(matrix, lookat) {
     if (matrix && lookat) super(matrix, lookat);
     else super();
   }
 
-  getName = function() {
+  getName = function () {
     return this.#name;
   }
 
-  getId = function() {
+  getId = function () {
     return this.#id;
   }
 
-  getPoints = function() {
+  getPoints = function () {
     return this.#points;
   }
 
-  getEdges = function() {
+  getEdges = function () {
     return this.#edges;
   }
 
-  getPolygonus = function() {
+  getPolygonus = function () {
     return this.#polygonus;
   }
 
-  getCoords = function() {
+  getCoords = function () {
     return this.#coords;
   }
 
-  getStyle = function(){
+  getStyle = function () {
     return this.#style;
   }
 
-  setName = function(name) {
+  setName = function (name) {
     this.#name = name;
   }
 
-  setId = function(id) {
+  setId = function (id) {
     this.#id = id;
   }
 
-  setPoints = function(itens) {
+  setPoints = function (itens) {
     this.#points = itens;
   }
 
-  setEdges = function(itens) {
+  setEdges = function (itens) {
     this.#edges = itens;
   }
 
-  setPolygonus = function(itens) {
+  setPolygonus = function (itens) {
     this.#polygonus = itens;
+    let p = this.#points;
+    itens.map(e => {
+      let v = e.vertices;
+      let a = p[v[0]], b = p[v[1]], c = p[v[2]], d = p[v[3]];
+      e.direction = {
+        x: (a.x + b.x + c.x + d.x) / 4,
+        y: (a.y + b.y + c.y + d.y) / 4,
+        z: (a.z + b.z + c.z + d.z) / 4
+      }
+    })
   }
 
-  setCoords = function(itens) {
+  setCoords = function (itens) {
     this.#coords = itens;
   }
-  
-  setStyle = function(style){
+
+  setStyle = function (style) {
     this.#style = style;
   }
 
-  sortEdges = function(calback) {
+  sortEdges = function (calback) {
     this.#edges.sort(calback);
   }
 
-  sortPolygonus = function(calback) {
+  sortPolygonus = function (calback) {
     this.#polygonus.sort(calback);
   }
 
-  clone = function() {
+  clone = function () {
     var item = new Entity(Util.cloneObject(this.getData()), Util.cloneObject(this.getLookat()));
     item.setName(this.#name + "");
     item.setId(this.#id + 0);
@@ -103,7 +114,7 @@ class Entity extends Matrix {
     return item;
   };
 
-  toString = function() {
+  toString = function () {
     return ("Entity 3D [" + this.#name + "]")
   }
 

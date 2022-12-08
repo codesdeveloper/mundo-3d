@@ -4,37 +4,93 @@ class Control {
   translate = { x: 0, y: 0, z: 0 };
   isTouchpad = false;
   itens_scene = [];
-  itens_show = [];
-  itens_available = [];
+  itens_show = [
+    [255, 0, 0],
+    [0, 255, 0],
+    null,
+    null,
+    null,
+    [0, 0, 255],
+    null,
+    [0, 180, 255],
+    null
+  ];
+
+  itens_available = [
+    [0, 0, 0],
+    [0, 0, 255],
+    [0, 0, 0],
+    [255, 0, 0],
+    [0, 0, 0],
+    [0, 180, 255],
+    [0, 0, 0],
+    [0, 255, 0],
+    [0, 0, 0],
+    [0, 0, 255],
+    [0, 0, 0],
+    [255, 0, 0],
+    [0, 0, 0],
+    [0, 180, 255],
+    [0, 0, 0],
+    [0, 255, 0],
+    [0, 0, 0],
+    [0, 0, 255],
+    [0, 0, 0],
+    [255, 0, 0],
+    [0, 0, 0],
+    [0, 180, 255],
+    [0, 0, 0],
+    [0, 255, 0],
+    [0, 0, 0],
+    [0, 0, 255],
+    [0, 0, 0],
+    [255, 0, 0],
+    [0, 0, 0],
+    [0, 180, 255],
+    [0, 0, 0],
+    [0, 255, 0],
+  ];
+
   isFull = true;
   lookat = { x: 0, y: 0, z: 0 };
-  
+
   #longclick = null;
-  #start = {x: 0, y: 0}
+  #clickTime = null;
+  #start = { x: 0, y: 0 }
   #isMove = false;
   #move_event = null;
+  #retur = null;
+  #pause = false;
 
   #initHtml = function () {
     $('body').append($('<div/>').addClass('control')
-      .html(`<form id="itens-list"><div class="itens-list"></div></form><input type="checkbox" id="modal-check" />
-    <label for="modal-check" class="modal-bg"></label><div class="modal-other"><h3>Addicionar Itens</h3>
-    <label for="modal-check" class="modal-close"><i class="bi bi-x"></i></label><div class="modal-list"></div></div>   
+      .html(`<form id="itens-list"><div class="itens-list"></div></form>
+    <div class="modal-bg"></div><div class="modal-other"><h3>Addicionar Itens</h3>
+    <label class="modal-close"><i class="bi bi-x"></i></label><div class="modal-list"></div></div>   
     <label class="full"><input type="checkbox" class="full-check"><i class="a bi bi-arrows-fullscreen"></i>
     <i class="b bi bi-arrows-angle-contract"></i></label><div class="refresh"><i class="bi bi-arrow-clockwise"></i></div>
-    <span id="toast"></span>`));
+    <span id="toast"></span><span class="cicle"><span class="cicle-on"></span></span>`));
 
     let itens_list = $('.itens-list');
-    for (let i = 0; i < 9; i++)
-      itens_list.append($('<label/>').addClass('item')
-        .html(`<input type="radio" name="rad"/><img src="images/terra_lado.png"/>`));
+    for (let i = 0; i < 9; i++) {
+      let color = this.itens_show[i];
+      if (color == null) color = 'transparent';
+      else color = (`rgb(${color})`);
 
-    itens_list.append($('<label/>').addClass('item other').attr('for', 'modal-check').html('<i class="bi bi-three-dots"></i>'));
+      itens_list.append($('<label/>').attr('id', i).addClass('item item-' + i)
+        .html(`<input type="radio" name="rad" value="${i}"/><span style="background:${color};"></span>`));
+      //.html(`<input type="radio" name="rad"/><span style="background-image:url('images/terra_lado.png');"></span>`));
+    }
+
+    itens_list.append($('<label/>').addClass('item other').html('<i class="bi bi-three-dots"></i>'));
 
     let modal_list = $('.modal-list');
-    for (let i = 0; i < 42; i++) {
+    this.itens_available.map((e, i) => {
+      let color = (`rgb(${e})`);
       modal_list.append($('<div/>').addClass('modal-item')
-        .html(`<img src="images/terra_lado.png"/>`));
-    }
+        .html(`<span draggable="true" id="${i}" style="background:${color};"></span>`));
+      //.html(`<span style="background-image:url('images/terra_lado.png');"></span>`));
+    })
 
     // mobile touchpad
     //<div class="move-full">
@@ -49,6 +105,11 @@ class Control {
   };
 
   init = () => {
+
+
+    //load scene of local storage
+    let itens = window.localStorage.getItem('itens_show');
+    if (itens != null) this.itens_show = JSON.parse(itens);
 
     this.#initHtml();
     $(".control").show();
@@ -80,10 +141,20 @@ class Control {
       if (itens.length > 0) {
         this.itens_scene = itens;
         itens.map(e => {
-          scene.addItem(new Textures.createCube(), e.x, e.y, e.z);
+          let obj = new Textures.createCube()
+          obj.getStyle().color = e.color;
+          scene.addItem(obj, e.x, e.y, e.z);
         })
       }
     }
+
+    //function experimental
+    for (let x = -30; x <= 30; ++x)for (let z = -30; z <= 30; ++z) {
+      let obj = new Textures.createCube()
+      //obj.getStyle().color = [255, 0, 180];
+      //scene.addItem(obj, x*2, 0, z*2);
+    }
+
 
     //refresh local storage e itens
     $('.refresh').click(() => {
@@ -92,22 +163,93 @@ class Control {
         window.localStorage.removeItem('itens_scene');
         window.localStorage.removeItem('scene_position');
         window.localStorage.removeItem('scene_lookat');
-        this.itens_scene = [];
+        window.localStorage.removeItem('itens_show');
         window.location.reload();
       }
     })
-    
+
     //addicionar evenetos
     $(document).on({
-      click: (e) => this.#click(e, this),
       keydown: (e) => this.#keydown(e),
       keyup: (e) => this.#keyup(),
-      mousedown:  (e) => this.#mousedown(e, this),
-      mousemove:  (e) => this.#mousemove(e, this),
-      mouseup:  (e) => this.#mouseup(e, this)
+    });
+
+    $('.control').on({
+      mousedown: (e) => this.#mousedown(e, this),
+      mousemove: (e) => this.#mousemove(e, this),
+      mouseup: (e) => this.#mouseup(e, this)
     });
 
     $('.full').click(this.#full);
+
+    $('.item.other').click(() => {
+      this.#pause = true;
+      $('.modal-other').show();
+      $('.modal-bg').show();
+      $('.itens-list .item').attr('draggable', 'true');
+    });
+
+    let close = () => {
+      this.#pause = false;
+      $('.modal-other').hide();
+      $('.modal-bg').hide();
+      $('.itens-list .item').attr('draggable', 'false');
+    }
+
+    $('.modal-bg').click(close);
+    $('.modal-close').click(close);
+
+
+    //função arrasta e solta
+
+    $('.modal-item').on('dragstart', (ev) => {
+      ev.originalEvent.dataTransfer.setData("item", ev.target.id);
+    })
+
+    $('.modal-list').on({
+      dragover: (ev) => {
+        ev.preventDefault();
+      },
+      drop: (ev) => {
+        ev.preventDefault();
+        var id = ev.originalEvent.dataTransfer.getData("item");
+        this.itens_show[id] = null;
+        $('.itens-list .item-' + id + ' span').css('background', 'transparent');
+        window.localStorage.setItem('itens_show', JSON.stringify(this.itens_show));
+      }
+    })
+
+    $('.itens-list .item').on({
+      dragstart: (ev) => {
+        ev.originalEvent.dataTransfer.setData("item", ev.target.id);
+      },
+
+      dragover: (ev) => {
+        ev.preventDefault();
+      },
+
+      drop: (ev) => {
+        ev.preventDefault();
+        var id = ev.originalEvent.dataTransfer.getData("item");
+        let item = this.itens_available[id];
+        let i = ev.currentTarget.id;
+        this.itens_show[i] = item;
+        $('.itens-list .item-' + i + ' span').css('background', 'rgb(' + item + ')');
+        window.localStorage.setItem('itens_show', JSON.stringify(this.itens_show));
+      },
+
+
+    })
+
+    // fin da função arrasta e solta
+
+
+
+
+
+    //$('#file').on('dragstart', function(evt) {
+
+
 
     //touchpad mobile controller
     /* if (config.isTouchpad) {
@@ -130,34 +272,8 @@ class Control {
 
   }
 
-  #click = function (e, thiz) {
-    var retorno = view.getClick(e.clientX, e.clientY);
-
-    if (retorno == null) return;
-    var item = retorno.entity;
-    var ind = retorno.ind;
-
-    let points = item.getPoints();
-    let pos = item.getPosition();
-
-    let polys = item.getPolygonus();
-    let verts = polys[ind].vertices;
-
-    let a = points[verts[0]];
-    let b = points[verts[1]];
-    let c = points[verts[2]];
-    let d = points[verts[3]];
-
-    let x = (a.x + b.x + c.x + d.x) / 4;
-    let y = (a.y + b.y + c.y + d.y) / 4;
-    let z = (a.z + b.z + c.z + d.z) / 4;
-
-    scene.addItem(new Textures.createCube(), (pos.x + (x * 2)), (pos.y + (y * 2)), (pos.z + (z * 2)));
-    thiz.itens_scene.push({ type: 'cube', x: (pos.x + (x * 2)), y: (pos.y + (y * 2)), z: (pos.z + (z * 2)) });
-    window.localStorage.setItem('itens_scene', JSON.stringify(this.itens_scene));
-  };
-
   #keydown = function (e) {
+    if (this.#pause) return;
     var c = Math.cos(this.lookat.y),
       s = Math.sin(this.lookat.y);
     switch (e.keyCode) {
@@ -204,29 +320,36 @@ class Control {
   }
 
   #mousedown = function (a) {
+    if (this.#pause) return;
     this.#start.x = a.clientX;
     this.#start.y = a.clientY;
     this.#isMove = true;
-    
-    this.#longclick = window.setInterval(() => {
-      let retorno = view.getClick(a.clientX, a.clientY);
-      if (retorno == null) return;
-      var item = retorno.entity;
-      scene.remove(item);
-      let pos = item.getPosition();
-      thiz.itens_scene = this.itens_scene.filter(e => {
-        if (e.x == pos.x && e.y == pos.y && e.z == pos.z);
-        else return e;
-      })
-      window.localStorage.setItem('itens_scene', JSON.stringify(this.itens_scene));
-    }, 1000);
-    
+
+    this.#clickTime = new Date().getTime();
+    this.#mousemove(a);
   }
 
   #mousemove = function (e) {
+    if (this.#pause) return;
     if (!this.#isMove) return;
+    if (this.#move_event) clearTimeout(this.#move_event);
 
-    if(this.#move_event)clearTimeout(this.#move_event);
+    let retorno = view.getClick(e.clientX, e.clientY);
+    if (retorno != null && this.#retur != retorno.entity)
+      $('.cicle').stop().show().css({
+        padding: '20px'
+      }).animate({
+        padding: 0,
+        //background: '#888'
+      }, 1000, () => {
+        $('.cicle').stop().hide();
+      });
+    else if (retorno == null) $('.cicle').hide();
+
+    $('.cicle').css({
+      left: e.clientX - 20,
+      top: e.clientY - 20,
+    })
 
     var c = Math.cos(this.lookat.y),
       s = Math.sin(this.lookat.y);
@@ -241,15 +364,67 @@ class Control {
     let cam = scene.getCamera();
     window.localStorage.setItem('scene_lookat', JSON.stringify({ lookat: cam.getLookat(), data: cam.getData() }));
 
-   this.#move_event = setTimeout(() => {
+    this.#move_event = setTimeout(() => {
       this.rotate = { x: 0, y: 0, z: 0 };
-    }, 10);
+    }, 100);
+
+    if (retorno == null || this.#retur != retorno.entity)
+      window.clearInterval(this.#longclick);
+
+    if (retorno != null && this.#retur != retorno.entity)
+      this.#longclick = window.setInterval(() => {
+        let retorno = view.getClick(e.clientX, e.clientY);
+        if (retorno == null) return;
+        var item = retorno.entity;
+        scene.remove(item);
+        let pos = item.getPosition();
+        this.itens_scene = this.itens_scene.filter(a => !(a.x == pos.x && a.y == pos.y && a.z == pos.z));
+        window.localStorage.setItem('itens_scene', JSON.stringify(this.itens_scene));
+
+        if (view.getClick(e.clientX, e.clientY) != null)
+          $('.cicle').stop().show().css({
+            padding: '20px'
+          }).animate({
+            padding: 0,
+            //background: '#888'
+          }, 1000, () => {
+            $('.cicle').stop().hide();
+          });
+
+      }, 1000);
+
+    this.#retur = (retorno == null) ? null : retorno.entity;
   }
 
-  #mouseup = function () {
+  #mouseup = function (e) {
     this.#isMove = false;
     this.rotate = { x: 0, y: 0, z: 0 };
     window.clearInterval(this.#longclick);
+    $('.cicle').stop().hide();
+    let time = new Date().getTime();
+    if ((time - this.#clickTime) < 1000) {
+      var retorno = view.getClick(e.clientX, e.clientY);
+      if (retorno == null) return;
+      var item = retorno.entity;
+      var ind = retorno.ind;
+      let pos = item.getPosition();
+      let poly = item.getPolygonus()[ind];
+      
+
+      let coords = poly.coords;
+      let x = coords.x, y = coords.y, z = coords.z;
+
+      let obj = new Textures.createCube();
+
+      let id = $('input[name="rad"]:checked').val();
+      let color = this.itens_show[id];
+      if (color == null) return;
+      obj.getStyle().color = color;
+
+      scene.addItem(obj, (pos.x + (x * 2)), (pos.y + (y * 2)), (pos.z + (z * 2)));
+      this.itens_scene.push({ color: color, x: (pos.x + (x * 2)), y: (pos.y + (y * 2)), z: (pos.z + (z * 2)) });
+      window.localStorage.setItem('itens_scene', JSON.stringify(this.itens_scene));
+    }
   }
 
   #full = function () {
@@ -269,9 +444,7 @@ class Control {
       this.isFull = true;
 
     }
-  };
-
-
+  }
 
 }
 

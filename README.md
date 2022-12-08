@@ -7,16 +7,14 @@ aplicação web de matriz 3d de objetos
 
 #montando click no momento
 
-* [x] Configura controle window e phone
 * [ ] Configurar draw image
 * [ ] Arrumar draw image
-* [x] Criar sistema para salver em local storage
-* [x] Configurar rotate image draw
 * [ ] Configurar luzes nos objetos
 * [ ] draw image com uvls
-* [x] Configurar click encontre objeto
-* [x] Configurar adicionar e remover objetos
 * [ ] Criar novos objetos
+* [ ] Arruamar short
+* [ ] Double lado
+* [ ] Alternativas para ficar mais leve
 * [ ] Revisar codigo
 * [ ] Criar sistema de salve e restore
 * [ ] Remove/procure e id em scene
@@ -27,16 +25,13 @@ aplicação web de matriz 3d de objetos
 
 
 
-
-
-
-
-
 Entity 
     Points
         x, y, z, color
     Edges
         a, b, color
     Polygonus
-        vertices, color
+        vertices, color, direction
+    Style
+        twoSides, color, type, size, color, shine
     

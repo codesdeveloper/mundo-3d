@@ -54,7 +54,7 @@ class View {
 
       // search edges
       if (style.type == Entity.TYPELINES)
-        for (var j = item.getEdges().length-1; j >= 0; --j) {
+        for (var j = item.getEdges().length - 1; j >= 0; --j) {
           let edge = item.getEdges()[j];
           if (this.context.isPointInStroke(edge.path, x, y)) {
             return {
@@ -65,18 +65,18 @@ class View {
           };
         }
 
-        //search polygonus
+      //search polygonus
       if (style.type == Entity.TYPEPOLYGONUS)
-      for (var j = item.getPolygonus().length - 1; j >= 0; --j) {
-        let poly = item.getPolygonus()[j];
-        if (this.context.isPointInPath(poly.path, x, y)) {
-          return {
-            type: Entity.TYPEPOLYGONUS,
-            entity: item,
-            ind: j
-          }
-        };
-      }
+        for (var j = item.getPolygonus().length - 1; j >= 0; --j) {
+          let poly = item.getPolygonus()[j];
+          if (this.context.isPointInPath(poly.path, x, y)) {
+            return {
+              type: Entity.TYPEPOLYGONUS,
+              entity: item,
+              ind: j
+            }
+          };
+        }
 
     }
 
@@ -88,11 +88,20 @@ class View {
     var vp = this.#scene.getViewport();
     ctx.clearRect(vp.x, vp.y, vp.width, vp.height);
 
+    ctx.beginPath();
+    ctx.moveTo(vp.x, vp.y);
+    ctx.lineTo(vp.x + vp.width, vp.y);
+    ctx.lineTo(vp.x + vp.width, vp.y + vp.height);
+    ctx.lineTo(vp.x, vp.y + vp.height);
+    ctx.lineTo(vp.x, vp.y);
+    ctx.clip();
+    ctx.stroke();
+
     for (var i = 0; i < itens.length; ++i) {
       var item = itens[i];
       if (item.disable) continue;
-      var coords = item.getCoords();
-      var style = item.getStyle();
+      let coords = item.getCoords();
+      let style = item.getStyle();
 
       ctx.fillStyle = "rgb(" + style.color + ")";
       ctx.strokeStyle = "rgb(" + style.color + ")";
@@ -126,27 +135,48 @@ class View {
       if (style.type == Entity.TYPEPOLYGONUS)
         for (var j = 0; j < item.getPolygonus().length; ++j) {
 
-          var poly = item.getPolygonus()[j];
+          let poly = item.getPolygonus()[j];
           let path = poly.path = new Path2D();
-          var vert = poly.vertices;
+          let vert = poly.vertices;
 
           var a = coords[vert[0]],
             b = coords[vert[1]],
             c = coords[vert[2]],
             d = coords[vert[3]];
 
-            if (a.z < 1 && b.z < 1 && c.z < 1 && d.z < 1) continue
+          if (!style.twoSides && poly.wordCoords.z > 0) continue;
 
-            path.moveTo(a.x, a.y);
-            path.lineTo(b.x, b.y);
-            path.lineTo(c.x, c.y);
-            path.lineTo(d.x, d.y);
+          let endX = vp.x + vp.width;
+          let endY = vp.y + vp.height;
 
-            ctx.fillStyle = 'red';
-            ctx.strokeStyle = 'green';
+          if (a.z < 1 && b.z < 1 && c.z < 1 && d.z < 1) continue
+          if (a.x < vp.x && b.x < vp.x && c.x < vp.x && d.z < vp.x) continue
+          if (a.y < vp.y && b.y < vp.y && c.y < vp.y && d.y < vp.y) continue
+          if (a.x > endX && b.x > endX && c.x > endX && d.x > endX) continue;
+          if (a.y > endY && b.y > endY && c.y > endY && d.y > endY) continue;
+          if (a.z > vp.z) continue;
 
-            ctx.fill(path);
-            ctx.stroke(path);
+          path.moveTo(a.x, a.y);
+          path.lineTo(b.x, b.y);
+          path.lineTo(c.x, c.y);
+          path.lineTo(d.x, d.y);
+
+          let color = style.color;
+          if (poly.color) color = poly.color;
+
+          let z = -poly.wordCoords.z;
+          let bri = style.shine;
+          color = [
+            Math.max(Math.round(color[0] * z * bri), 0),
+            Math.max(Math.round(color[1] * z * bri), 0),
+            Math.max(Math.round(color[2] * z * bri), 0)
+          ];
+
+          ctx.fillStyle = 'rgb(' + color + ')';
+          ctx.strokeStyle = 'green';
+
+          ctx.fill(path);
+          ctx.stroke(path);
 
 
 
@@ -258,22 +288,22 @@ class View {
               ctx.drawImage(img, 0, 0, 1, 1)
               ctx.restore();
               /* //segundo triangulo *//*
-            ctx.save();
-            ctx.beginPath();
-            ctx.moveTo(a.x, a.y);
-            ctx.lineTo(c.x, c.y);
-            ctx.lineTo(d.x, d.y);
-            ctx.clip();
-            ctx.fill();
-            // ctx.stroke();
-            var img = document.createElement("img");
-            img.src = poly.texture;
-            var data = item.getData();
-            var out = item.transform(1, 1, 1);
-            ctx.setTransform((c.x - d.x), (c.y - d.y), (d.x - a.x), (d.y - a.y), a.x, a.y);
-            ctx.drawImage(img, 0, 0, 1, 1);
-            ctx.restore();
-            // */
+  ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(a.x, a.y);
+  ctx.lineTo(c.x, c.y);
+  ctx.lineTo(d.x, d.y);
+  ctx.clip();
+  ctx.fill();
+  // ctx.stroke();
+  var img = document.createElement("img");
+  img.src = poly.texture;
+  var data = item.getData();
+  var out = item.transform(1, 1, 1);
+  ctx.setTransform((c.x - d.x), (c.y - d.y), (d.x - a.x), (d.y - a.y), a.x, a.y);
+  ctx.drawImage(img, 0, 0, 1, 1);
+  ctx.restore();
+  // */
 
             /*
                       ctx.strokeStyle = "red";
