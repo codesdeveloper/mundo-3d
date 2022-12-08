@@ -109,7 +109,7 @@ class Entity extends Matrix {
     item.setCoords(Util.cloneObject(this.#coords));
     var position = Util.cloneObject(this.getPosition());
     item.setPosition(position.x, position.y, position.z);
-    item.scale(this.getSize().x, this.getSize().y, this.getSize().z)
+    item.setScale(this.getSize().x, this.getSize().y, this.getSize().z)
     item.setStyle(Util.cloneObject(this.#style));
     return item;
   };

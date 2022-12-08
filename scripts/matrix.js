@@ -43,7 +43,7 @@ class Matrix {
     this.#lookat.z += z;
   }
 
-  scale = function(x, y, z) {
+  setScale = function(x, y, z) {
     this.#scale.x *= x;
     this.#scale.y *= y;
     this.#scale.z *= z;

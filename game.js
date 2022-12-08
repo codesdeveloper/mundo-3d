@@ -10,7 +10,8 @@ const view = new View();
 canvas.width = width;
 canvas.height = height;
 scene.setViewport({ width: width, height: height, x: 0, y: 0, z: 100});
-//scene.getCamera().setPosition(0, 0, -4);
+scene.getCamera().setPosition(0, 12, -29);
+scene.getCamera().rotate(-0.4, 0, 0);
 view.setFPS(60);
 view.setScene(scene);
 view.setCanvas(canvas);
@@ -19,18 +20,29 @@ control.init();
 //Definir objetos
 var cube = Textures.createCube();
 //var pyramid = Textures.createPyramid();
-var plane = Textures.createPlane(120, 120);
+var plane = Textures.createPlane(80, 80);
 var sofa = Itens_Textures.createSofa();
 
 //Configurações dos objetos
-plane.setStyle({ color: [255, 255, 25], size: 10, type: Entity.TYPEPOLYGONUS, twoSides: false});
-sofa.setStyle({ color: [10, 10, 255], size: 50, type: Entity.TYPEPOINTS, twoSides: true, shine: 0.6});
+plane.setStyle({ color: [0, 25, 0], size: 10, type: Entity.TYPEPOLYGONUS, twoSides: false});
+cube.setStyle({ color: [255, 0, 0], size: 50, type: Entity.TYPEPOLYGONUS, twoSides: true, shine: 0.6});
 
-plane.scale(2, 2, 2);
+plane.setScale(4, 4, 4);
 
 //Adicionar itens no layout
-//scene.addItem(plane, 0, -1, 0);
-scene.addItem(cube, 0, -1, 5);
+//scene.addItem(plane, 0, -1, 20);
+
+scene.addItem(cube.clone(), -2, -1, 2);
+scene.addItem(cube.clone(), 0, -1, 2);
+scene.addItem(cube.clone(), 2, -1, 2);
+
+scene.addItem(cube.clone(), -2, -1, 0);
+scene.addItem(cube.clone(), 0, -1, 0);
+scene.addItem(cube.clone(), 2, -1, 0);
+
+scene.addItem(cube.clone(), -2, -1, -2);
+scene.addItem(cube.clone(), 0, -1, -2);
+scene.addItem(cube.clone(), 2, -1, -2);
 
 //Start animação
 view.frameAnimation(() => {
